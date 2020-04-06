@@ -36,7 +36,7 @@ public class Paddle {
         x = screenX / 2;
 
         // Y is the top coordinate
-        float y = screenY - 20;
+        float y = screenY - 500;
 
         rect = new RectF(x, y, x + length, y + height);
 
