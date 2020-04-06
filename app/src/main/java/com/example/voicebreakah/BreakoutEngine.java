@@ -300,8 +300,8 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
             // Draw the score
             paint.setTextSize(70);
-            canvas.drawText("Score: " + score + "   Lives: " + lives, 10,80, paint);
-
+            canvas.drawText("Score: " + paddle.getRect() + "   Lives: " + lives, 10,80, paint);
+            //canvas.drawText("Score: " + score + "   Lives: " + lives, 10,80, paint);
             // Show everything we have drawn
             ourHolder.unlockCanvasAndPost(canvas);
         }
