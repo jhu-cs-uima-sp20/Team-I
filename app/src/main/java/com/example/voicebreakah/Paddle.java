@@ -32,7 +32,7 @@ public class Paddle {
         length = 130;
         float height = 20;
 
-        // Start paddle in roughly the sceen centre
+        // Start paddle in roughly the screen centre
         x = screenX / 2;
 
         // Y is the top coordinate
