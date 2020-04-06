@@ -12,18 +12,23 @@ public class Ball {
     private float ballWidth = 10;
     private float ballHeight = 10;
 
+    // constructor
     Ball(){
 
         xVelocity = 200;
         yVelocity = -400;
 
+        //float x = screenX / 2;
+        //float y = screenY - screenY * (float) 0.21;
         rect = new RectF();
     }
 
+    // Return rectangle
     RectF getRect(){
         return rect;
     }
 
+    // Update ball movement
     void update(long fps){
         rect.left = rect.left + (xVelocity / fps);
         rect.top = rect.top + (yVelocity / fps);
@@ -62,6 +67,6 @@ public class Ball {
         rect.left = x / 2;
         rect.top = y - 20;
         rect.right = x / 2 + ballWidth;
-        rect.bottom = y - 20 - ballHeight;
+        rect.bottom = y - y * (float) 0.21 - ballHeight;
     }
 }
