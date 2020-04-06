@@ -37,7 +37,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     private Canvas canvas;
     private Paint paint;
 
-    // How wide and high is the screen?
+    // Width and height of screen
     private int screenX;
     private int screenY;
 
@@ -234,6 +234,14 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             soundPool.play(beep3ID, 1, 1, 0, 0, 1);
         }
 
+        // Make sure paddle doesn't go off the left or right side of the screen
+        if (paddle.getRect().right > screenX - 10) {
+            // can't move right anymore
+        } else if (paddle.getRect().left < 0) {
+            // can't move left anymore
+        }
+
+
         // Pause if cleared screen
         if(score == numBricks * 10){
             paused = true;
@@ -246,13 +254,13 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         ball.reset(screenX, screenY);
 
         int brickWidth = screenX / 8;
-        int brickHeight = screenY / 10;
+        int brickHeight = screenY / 30;
 
         // Build a wall of bricks
         numBricks = 0;
 
         for(int column = 0; column < 8; column ++ ){
-            for(int row = 0; row < 3; row ++ ){
+            for(int row = 0; row < 10; row ++ ){
                 bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight);
                 numBricks ++;
             }
