@@ -78,24 +78,30 @@
         android:id="@+id/tv_voice_enabled"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:text="@string/voice_enabled"
         app:layout_constraintBaseline_toBaselineOf="@+id/switch1"
-        tools:layout_editor_absoluteX="167dp" />
+        app:layout_constraintStart_toEndOf="@+id/switch1" />
 
     <TextView
         android:id="@+id/tv_sound"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:text="@string/sound"
         app:layout_constraintBaseline_toBaselineOf="@+id/switch2"
-        tools:layout_editor_absoluteX="167dp" />
+        app:layout_constraintStart_toEndOf="@+id/switch2" />
 
     <TextView
         android:id="@+id/tv_music"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:text="@string/music"
         app:layout_constraintBaseline_toBaselineOf="@+id/switch3"
-        tools:layout_editor_absoluteX="169dp" />
+        app:layout_constraintStart_toEndOf="@+id/switch3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

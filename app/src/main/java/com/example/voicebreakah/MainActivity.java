@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         Button skinsButton = findViewById(R.id.skins_button);
         skinsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SkinsActivity.class);
+                Intent intent = new Intent(MainActivity.this, Skins.class);
                 startActivity(intent);
             }
         });
