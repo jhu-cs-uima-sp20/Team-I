@@ -65,8 +65,10 @@ public class Ball {
 
     void reset(int x, int y){
         rect.left = x / 2;
-        rect.top = y - 20;
-        rect.right = x / 2 + ballWidth;
         rect.bottom = y - y * (float) 0.21 - ballHeight;
+
+        rect.top = rect.bottom+ballHeight;
+        rect.right = x / 2 + ballWidth;
+
     }
 }
