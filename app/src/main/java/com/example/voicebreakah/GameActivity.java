@@ -6,6 +6,9 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 public class GameActivity extends AppCompatActivity {
 
