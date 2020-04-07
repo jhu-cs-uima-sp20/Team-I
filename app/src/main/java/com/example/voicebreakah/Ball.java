@@ -1,12 +1,13 @@
 package com.example.voicebreakah;
 
+import android.graphics.Rect;
 import android.graphics.RectF;
 
 import java.util.Random;
 
 public class Ball {
 
-    private RectF rect;
+    private Rect rect; //* TR change to RectF
     private float xVelocity;
     private float yVelocity;
     private float ballWidth = 10;
@@ -20,20 +21,21 @@ public class Ball {
 
         //float x = screenX / 2;
         //float y = screenY - screenY * (float) 0.21;
-        rect = new RectF();
+        rect = new Rect(); //* TR change to RectF()
     }
 
     // Return rectangle
-    RectF getRect(){
+    Rect getRect(){
         return rect;
-    }
+    } //* TR change to RectF
 
     // Update ball movement
     void update(long fps){
-        rect.left = rect.left + (xVelocity / fps);
-        rect.top = rect.top + (yVelocity / fps);
-        rect.right = rect.left + ballWidth;
-        rect.bottom = rect.top - ballHeight;
+        rect.left = (int)(rect.left + (xVelocity / fps)); //* TR get rid of casts
+        rect.top = (int)(rect.top + (yVelocity / fps));
+        rect.right = (int)(rect.left + ballWidth);
+        rect.bottom = (int)(rect.top - ballHeight);
+
     }
 
     void reverseYVelocity(){
@@ -53,22 +55,22 @@ public class Ball {
         }
     }
 
-    void clearObstacleY(float y){
-        rect.bottom = y;
-        rect.top = y - ballHeight;
+    void clearObstacleY(float y){//* TR get rid of casts
+        rect.bottom = (int)y;
+        rect.top = (int)(y - ballHeight);
     }
 
-    void clearObstacleX(float x){
-        rect.left = x;
-        rect.right = x + ballWidth;
+    void clearObstacleX(float x){//* TR get rid of casts
+        rect.left = (int)x;
+        rect.right = (int)(x + ballWidth);
     }
 
-    void reset(int x, int y){
+    void reset(int x, int y){//* TR get rid of casts
         rect.left = x / 2;
-        rect.bottom = y - y * (float) 0.21 - ballHeight;
+        rect.bottom = (int)(y - y * (float) 0.21 - ballHeight);
 
-        rect.top = rect.bottom+ballHeight;
-        rect.right = x / 2 + ballWidth;
+        rect.top = (int)(rect.bottom+ballHeight);
+        rect.right = (int)(x / 2 + ballWidth);
 
     }
 }

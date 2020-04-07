@@ -1,11 +1,13 @@
 package com.example.voicebreakah;
 
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 
 public class Paddle {
 
     // RectF is an object that holds four coordinates - just what we need
-    private RectF rect;
+    private Rect rect; //*
 
     // How long will our paddle will be
     private float length;
@@ -38,17 +40,20 @@ public class Paddle {
         // Y is the top coordinate
         float y = screenY - screenY * (float) 0.2;
 
-        rect = new RectF(x, y, x + length, y + height);
+        rect = new Rect((int)x, (int)y, (int)(x + length), (int)(y + height)); //* to reverse get rid of (int)
 
         // How fast is the paddle in pixels per second
         paddleSpeed = 350;
+        //Drawable drawable = getResources().getDrawable(R.drawable.my_drawable);
+        //drawable.setBounds(rect);
+        //drawable.draw(canvas);
     }
 
     // This is a getter method to make the rectangle that
     // defines our paddle available in BreakoutView class
-    RectF getRect(){
+    Rect getRect(){
         return rect;
-    }
+    } //* to reverse make return type RectF
 
     // This method will be used to change/set if the paddle is going left, right or nowhere
     void setMovementState(int state){
@@ -67,7 +72,7 @@ public class Paddle {
             x = x + paddleSpeed / fps;
         }
 
-        rect.left = x;
-        rect.right = x + length;
+        rect.left = (int) x; //* to reverse get rid of (int)
+        rect.right = (int)(x + length); //* ^
     }
 }
