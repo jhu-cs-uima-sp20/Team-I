@@ -10,8 +10,8 @@ public class Ball {
     private Rect rect; //* TR change to RectF
     private float xVelocity;
     private float yVelocity;
-    private float ballWidth = 10;
-    private float ballHeight = 10;
+    private float ballWidth = 20;
+    private float ballHeight = 20;
 
     // constructor
     Ball(){
@@ -43,7 +43,7 @@ public class Ball {
     }
 
     void reverseXVelocity(){
-        xVelocity = - xVelocity;
+        xVelocity = -xVelocity;
     }
 
     void setRandomXVelocity(){
