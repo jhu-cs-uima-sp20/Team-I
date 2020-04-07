@@ -205,5 +205,4 @@
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintHorizontal_bias="0.568"
         app:layout_constraintStart_toEndOf="@+id/textView4" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

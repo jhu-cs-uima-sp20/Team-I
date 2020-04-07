@@ -8,4 +8,6 @@
     <string name="options">Non-Voice Control Options:</string>
     <string name="tilt">TILT</string>
     <string name="tap">TAP</string>
+    <string name="skins">Skins</string>
+
 </resources>
