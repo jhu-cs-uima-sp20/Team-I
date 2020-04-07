@@ -30,9 +30,9 @@ public class Paddle {
     // When we create an object from this class we will pass
     // in the screen width and height
     Paddle(int screenX, int screenY){
-        // 130 pixels wide and 20 pixels high
-        length = 130;
-        float height = 20;
+        // 150 pixels wide and 40 pixels high
+        length = 150;
+        float height = 40;
 
         // Start paddle in roughly the screen centre
         x = screenX / 2;

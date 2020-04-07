@@ -197,7 +197,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         if(Rect.intersects(paddle.getRect(),ball.getRect())) { //*change to RectF.intersects
             ball.setRandomXVelocity();
             ball.reverseYVelocity();
-            ball.clearObstacleY(paddle.getRect().top - 2);
+            ball.clearObstacleY(paddle.getRect().top - 10);
             soundPool.play(beep1ID, 1, 1, 0, 0, 1);
         }
 
@@ -233,9 +233,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         }
 
         // If the ball hits right wall bounce
-        if(ball.getRect().right > screenX - 10){
+        if(ball.getRect().right > screenX - 20){
             ball.reverseXVelocity();
-            ball.clearObstacleX(screenX - 22);
+            ball.clearObstacleX(screenX - 42);
             soundPool.play(beep3ID, 1, 1, 0, 0, 1);
         }
 
