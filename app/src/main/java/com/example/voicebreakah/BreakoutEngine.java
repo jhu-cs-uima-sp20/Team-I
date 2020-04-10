@@ -283,6 +283,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     }
 
 
+    // can use later, when have new game option instead of returning to main
     private void newGame() {
         gameOver = false;
         score = 0;
@@ -290,7 +291,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     }
 
 
-    /** when starting a new game */
+    /** when starting a new level */
     void restart(){
         Log.d("restart", "restart, " + speedFactor);
 
@@ -415,6 +416,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
                 context.startActivity(new Intent(context,MainActivity.class));
             }
         }
+
         return true;
     }
 }
