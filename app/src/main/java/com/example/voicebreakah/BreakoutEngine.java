@@ -244,7 +244,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
                 restart();
                 newGame == true;
             }*/
-            
+
             paused = true;
             gameOver = true;
         }
