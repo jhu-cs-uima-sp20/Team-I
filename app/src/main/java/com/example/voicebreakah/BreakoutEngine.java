@@ -2,6 +2,7 @@ package com.example.voicebreakah;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -15,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -41,6 +43,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     // A Canvas and a Paint object
     private Canvas canvas;
     private Paint paint;
+
+    // SharedPreferences for highscore
+    private SharedPreferences myPrefs;
 
     // Width and height of screen
     private int screenX;
@@ -97,6 +102,8 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         // This calls the default constructor to setup the rest of the object
         super(context);
         Log.d("engine", "we're in engine");
+
+        myPrefs = context.getSharedPreferences("PREFS",Context.MODE_PRIVATE);
 
         // Initialize ourHolder and paint objects
         ourHolder = getHolder();
@@ -230,37 +237,38 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             //soundPool.play(beep1ID, 1, 1, 0, 0, 1);
         }
 
+
         // If ball hits bottom of screen, game over
         if(ball.getRect().bottom > screenY){
             //ball.reverseYVelocity();
             ball.clearObstacleY(screenY - 2);
             paused = true;
             gameOver = true;
-
             // soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
-        }
 
-        // Bounce the ball back when it hits the top of screen
-        if(ball.getRect().top < 0){
+            // update highscore
+            int currHS = myPrefs.getInt("highscore", 0);
+            if (score > currHS) {
+                SharedPreferences.Editor peditor = myPrefs.edit();
+                peditor.putInt("highscore", score);
+                peditor.commit();
+            }
+
+        } else if (ball.getRect().top < 0){
             ball.reverseYVelocity();
             ball.clearObstacleY(12);
             //soundPool.play(beep2ID, 1, 1, 0, 0, 1);
-        }
 
-        // If the ball hits left wall bounce
-        if(ball.getRect().left < 0){
+        } else if(ball.getRect().left < 0){
             ball.reverseXVelocity();
             ball.clearObstacleX(2);
             //soundPool.play(beep3ID, 1, 1, 0, 0, 1);
-        }
 
-        // If the ball hits right wall bounce
-        if(ball.getRect().right > screenX){
+        } else if(ball.getRect().right > screenX){
             ball.reverseXVelocity();
             ball.clearObstacleX(screenX - 42);
             //soundPool.play(beep3ID, 1, 1, 0, 0, 1);
         }
-
 
         // Pause if cleared screen
         if (bricksLeft == 0) {
