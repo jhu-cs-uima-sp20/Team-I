@@ -223,7 +223,8 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         // Check for ball colliding with paddle
         if(Rect.intersects(paddle.getRect(),ball.getRect())) { //*change to RectF.intersects
-            ball.setRandomXVelocity();
+            //ball.setRandomXVelocity();
+            ball.setXVelocity(ball.getXVelocity());
             ball.reverseYVelocity();
             ball.clearObstacleY(paddle.getRect().top - 10);
             //soundPool.play(beep1ID, 1, 1, 0, 0, 1);
@@ -233,20 +234,10 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         if(ball.getRect().bottom > screenY){
             //ball.reverseYVelocity();
             ball.clearObstacleY(screenY - 2);
-
-
-            // Lose a life
-            /*lives --;
-            soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
-            paused = true;
-            if(lives == 0){
-                paused = true;
-                restart();
-                newGame == true;
-            }*/
-
             paused = true;
             gameOver = true;
+
+            // soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
         }
 
         // Bounce the ball back when it hits the top of screen
@@ -284,21 +275,8 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     /** when starting a new game */
     void restart(){
-        // reset everything
-        /*
-        if (newGame) {
-            //gameOver = true;
-            level = 1;
-            speedFactor = 1;
-            prevScore = score;
-            score = 0;
-            ball.setSpeedFactor(speedFactor);
-        }*/
-
         Log.d("restart", "restart, " + speedFactor);
 
-        //speedFactor += 0.5;
-        //ball.setSpeedFactor(speedFactor);
         ball.reset(screenX, screenY);
         paddle = new Paddle(screenX, screenY);
         int brickWidth = screenX / 3;
