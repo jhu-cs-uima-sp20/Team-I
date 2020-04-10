@@ -1,6 +1,7 @@
 package com.example.voicebreakah;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -25,14 +26,13 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     // This is our thread
     private Thread gameThread = null;
+    //private Thread gameOverThread = null;
 
-    // This is new. We need a SurfaceHolder
-    // When we use Paint and Canvas in a thread
+    // This is new. We need a SurfaceHolder when we use Paint and Canvas in a thread
     // We will see it in action in the draw method soon.
     private SurfaceHolder ourHolder;
 
-    // A boolean which we will set and unset
-    // when the game is running- or not.
+    // A boolean which we will set and unset when the game is running- or not.
     private volatile boolean playing;
 
     // Game is paused at the start
@@ -60,7 +60,8 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     // Up to 200 bricks
     Brick[] bricks = new Brick[200];
-    int numBricks = 0;
+    int numBricks; // = 0;
+    int bricksLeft; // = 0;
 
     // For sound FX
     SoundPool soundPool;
@@ -72,11 +73,16 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     // The score
     int score = 0;
+    //int prevScore = 0;
+
+    boolean newGame;
+    boolean gameOver;
 
     // Lives
     int lives = 3;
     int level = 1;
-    boolean newGame = true;
+    float speedFactor = 1;
+
 
     // Paddle speed
     int speed = 100;
@@ -84,10 +90,13 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     // player touching screen
     boolean touching = false;
 
-    // The constructor is called when the object is first created
+
+
+    /** The constructor is called when the object is first created */
     public BreakoutEngine(Context context, int x, int y) {
         // This calls the default constructor to setup the rest of the object
         super(context);
+        Log.d("engine", "we're in engine");
 
         // Initialize ourHolder and paint objects
         ourHolder = getHolder();
@@ -99,12 +108,18 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         // Initialize the player's paddle
         paddle = new Paddle(screenX, screenY);
-
-        // Create a ball
         ball = new Ball();
+        numBricks = 0;
+        bricksLeft = 0;
+
+        speedFactor = 1;
+
+        newGame = true;
+        gameOver = false;
 
         // Load the sounds
         // This SoundPool is deprecated but don't worry
+        /*
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
 
         try{
@@ -128,15 +143,16 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             descriptor = assetManager.openFd("explode.ogg");
             explodeID = soundPool.load(descriptor, 0);
 
-        }catch(IOException e){
+        } catch(IOException e){
             // Print an error message to the console
             Log.e("error", "failed to load sound files");
-        }
+        }*/
 
         restart();
     }
 
-    // Runs when the OS calls onPause on BreakoutActivity method
+
+    /** Runs when the OS calls onPause on BreakoutActivity method */
     public void pause() {
         playing = false;
         try {
@@ -146,22 +162,22 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         }
     }
 
-    // Runs when the OS calls onResume on BreakoutActivity method
+
+    /** Runs when the OS calls onResume on BreakoutActivity method */
     public void resume() {
         playing = true;
         gameThread = new Thread(this);
         gameThread.start();
     }
 
+
+    /** Actual game */
     @Override
     public void run() {
         while (playing) {
-
-
             // Capture the current time in milliseconds in startFrameTime
             long startFrameTime = System.currentTimeMillis();
 
-            // Update the frame
             // Update the frame
             if(!paused){
                 update();
@@ -170,9 +186,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             // Draw the frame
             draw();
 
-            // Calculate the fps this frame
-            // We can then use the result to
-            // time animations and more.
+            // Calculate the fps this frame; can then use the result to time animations and more.
             timeThisFrame = System.currentTimeMillis() - startFrameTime;
             if (timeThisFrame >= 1) {
                 fps = 1000 / timeThisFrame;
@@ -181,6 +195,8 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         }
     }
 
+
+    /** update method to call in-game */
     private void update(){
         // Move the paddle if required
         paddle.update(fps, speed);
@@ -194,14 +210,13 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         // Check for ball colliding with a brick
         for(int i = 0; i < numBricks; i++){
-
             if (bricks[i].getVisibility()){
-
-                if(Rect.intersects(bricks[i].getRect(),ball.getRect())) {//*change to RectF.intersects
+                if(Rect.intersects(bricks[i].getRect(),ball.getRect())) {  //*change to RectF.intersects
                     bricks[i].setInvisible();
                     ball.reverseYVelocity();
                     score = score + 10;
-                    soundPool.play(explodeID, 1, 1, 0, 0, 1);
+                    bricksLeft--;
+                    //soundPool.play(explodeID, 1, 1, 0, 0, 1);
                 }
             }
         }
@@ -211,76 +226,79 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             ball.setRandomXVelocity();
             ball.reverseYVelocity();
             ball.clearObstacleY(paddle.getRect().top - 10);
-            soundPool.play(beep1ID, 1, 1, 0, 0, 1);
+            //soundPool.play(beep1ID, 1, 1, 0, 0, 1);
         }
 
-        // Bounce the ball back when it hits the bottom of screen
-        // And deduct a life
+        // If ball hits bottom of screen, game over
         if(ball.getRect().bottom > screenY){
             //ball.reverseYVelocity();
             ball.clearObstacleY(screenY - 2);
 
 
-            newGame = true;
             // Lose a life
-            //lives --;
+            /*lives --;
             soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
             paused = true;
-            restart();
-            /*if(lives == 0){
+            if(lives == 0){
                 paused = true;
                 restart();
                 newGame == true;
             }*/
-
+            
+            paused = true;
+            gameOver = true;
         }
 
         // Bounce the ball back when it hits the top of screen
         if(ball.getRect().top < 0){
             ball.reverseYVelocity();
             ball.clearObstacleY(12);
-            soundPool.play(beep2ID, 1, 1, 0, 0, 1);
+            //soundPool.play(beep2ID, 1, 1, 0, 0, 1);
         }
 
         // If the ball hits left wall bounce
         if(ball.getRect().left < 0){
             ball.reverseXVelocity();
             ball.clearObstacleX(2);
-            soundPool.play(beep3ID, 1, 1, 0, 0, 1);
+            //soundPool.play(beep3ID, 1, 1, 0, 0, 1);
         }
 
         // If the ball hits right wall bounce
-        if(ball.getRect().right > screenX - 20){
+        if(ball.getRect().right > screenX){
             ball.reverseXVelocity();
             ball.clearObstacleX(screenX - 42);
-            soundPool.play(beep3ID, 1, 1, 0, 0, 1);
-        }
-
-        // Make sure paddle doesn't go off the left or right side of the screen
-        if (paddle.getRect().right > screenX - 10) {
-            // can't move right anymore
-        } else if (paddle.getRect().left < 0) {
-            // can't move left anymore
+            //soundPool.play(beep3ID, 1, 1, 0, 0, 1);
         }
 
 
         // Pause if cleared screen
-        if(score == numBricks * 10){
+        if (bricksLeft == 0) {
             paused = true;
-            level++;
-            ball.setSpeedFactor(level);
+            //level++;
+            speedFactor += 0.3;
+            ball.setSpeedFactor(speedFactor);
             restart();
         }
     }
 
-    void restart(){
-        // Put the ball back to the start
 
-        if (newGame == true) {
+    /** when starting a new game */
+    void restart(){
+        // reset everything
+        /*
+        if (newGame) {
+            //gameOver = true;
             level = 1;
-            ball.setSpeedFactor(level);
-            newGame = false;
-        }
+            speedFactor = 1;
+            prevScore = score;
+            score = 0;
+            ball.setSpeedFactor(speedFactor);
+        }*/
+
+        Log.d("restart", "restart, " + speedFactor);
+
+        //speedFactor += 0.5;
+        //ball.setSpeedFactor(speedFactor);
         ball.reset(screenX, screenY);
         paddle = new Paddle(screenX, screenY);
         int brickWidth = screenX / 3;
@@ -288,39 +306,37 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         // Build a wall of bricks
         numBricks = 0;
-
         for(int column = 0; column < 3; column ++ ){
             for(int row = 0; row < 1; row ++ ){
                 bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight);
-                numBricks ++;
+                numBricks++;
+                bricksLeft++;
             }
         }
-
-        // Reset scores and lives
-        score = 0;
-        lives = 3;
-
     }
 
-    private void draw(){
+
+    /** Render our game screen */
+    private void draw() {
         // Make sure our drawing surface is valid or game will crash
         if (ourHolder.getSurface().isValid()) {
             // Lock the canvas ready to draw
             canvas = ourHolder.lockCanvas();
 
-            // Draw the background color
+            // Draw the background blue color
             canvas.drawColor(Color.argb(255,  140, 207, 255));
 
             // Draw everything to the screen
 
             // Choose the brush color for drawing
             paint.setColor(Color.argb(255,  242, 12, 12));
-            //Drawable paddle_pic = getResources().getDrawable(R.drawable.paddle_pink);
-            //drawable.setBounds(myRect);
-            //drawable.draw(canvas);
             Resources res = getResources();
             Drawable d = res.getDrawable(R.drawable.paddle_pink);
+
+            //drawable.setBounds(myRect);
+            //drawable.draw(canvas);
             //PictureDrawable paddle_pic = new PictureDrawable(drawable);
+
             // Draw the paddle
             d.setBounds((paddle.getRect()));
             d.draw(canvas);
@@ -330,6 +346,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
             // Draw the ball
             canvas.drawRect(ball.getRect(), paint);
+
 
             // Change the brush color for drawing
             paint.setColor(Color.argb(255,  255, 255, 255));
@@ -346,42 +363,62 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             paint.setColor(Color.argb(255,  0, 0, 0));
 
             // Draw the score
-            paint.setTextSize(70);
-            //canvas.drawText("Score: " + score + "   Lives: " + lives, 10,80, paint);
+            paint.setTextSize(40);
+            canvas.drawText("Score: " + score, 10,80, paint);
+            //canvas.drawText("Score: " + score + "   Lives: " + lives, 10, 80, paint);
+
+            if (gameOver) {
+                Rect go = new Rect(200, 200, screenX - 200, screenY - 400);
+                paint.setColor(Color.argb(255, 255, 255, 255));
+                canvas.drawRect(go, paint);
+
+                paint.setColor(Color.argb(255, 0, 0, 0));
+                paint.setTextSize(50);
+                paint.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText("Your score: " + score, screenX / 2,
+                        screenY / 2 - 100, paint);
+                paint.setTextAlign(Paint.Align.LEFT);
+            }
+
             // Show everything we have drawn
             ourHolder.unlockCanvasAndPost(canvas);
         }
     }
 
-    // The SurfaceView class implements onTouchListener
-    // So we can override this method and detect screen touches.
+    /** The SurfaceView class implements onTouchListener, so we can override this method and
+     * detect screen touches
+     * @param motionEvent some motion
+     * @return true
+     */
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         // Our code here
-        switch (motionEvent.getActionMasked()) {
+        if (!gameOver) {
+            switch (motionEvent.getActionMasked()) {
+                // Player has touched the screen
+                case MotionEvent.ACTION_DOWN:
+                    paused = false;
+                    touching = true;
+                    if (motionEvent.getX() > screenX / (float) 2) {
+                        paddle.setMovementState(paddle.RIGHT);
+                    } else {
+                        paddle.setMovementState(paddle.LEFT);
+                    }
+                    break;
 
-            // Player has touched the screen
-            case MotionEvent.ACTION_DOWN:
-
-                paused = false;
-                touching = true;
-                if(motionEvent.getX() > screenX / 2){
-                    paddle.setMovementState(paddle.RIGHT);
-                }
-                else{
-                    paddle.setMovementState(paddle.LEFT);
-                }
-
-                break;
-
-            // Player has removed finger from screen
-            case MotionEvent.ACTION_UP:
-                touching = false;
-                speed = 100;
-                paddle.setMovementState(paddle.STOPPED);
-                break;
+                // Player has removed finger from screen
+                case MotionEvent.ACTION_UP:
+                    touching = false;
+                    speed = 100;
+                    paddle.setMovementState(paddle.STOPPED);
+                    break;
+            }
+        } else {
+            if (MotionEvent.ACTION_DOWN == 0) {
+                gameOver = false;
+                restart();
+            }
         }
-
         return true;
     }
 }
