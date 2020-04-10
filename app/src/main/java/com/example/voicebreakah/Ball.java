@@ -14,16 +14,17 @@ public class Ball {
     private float originalVelocityY;
     private float ballWidth = 20;
     private float ballHeight = 20;
-    private float speedFactor;
+    //private float speedFactor;
 
     // constructor
-    Ball(){
-
-        speedFactor = 1;
+    Ball() {
+        xVelocity = 200;
+        yVelocity = -400;
+        //speedFactor = 1;
         originalVelocityX = 200;
         originalVelocityY = -400;
-        xVelocity = originalVelocityY*(speedFactor);
-        yVelocity = originalVelocityY*(speedFactor);
+        //xVelocity = originalVelocityY * (speedFactor);
+        //yVelocity = originalVelocityY * (speedFactor);
 
         //float x = screenX / 2;
         //float y = screenY - screenY * (float) 0.21;
@@ -53,7 +54,7 @@ public class Ball {
     }
 
     void setXVelocity(float newVelocity) {
-        xVelocity=newVelocity;
+        xVelocity = newVelocity;
     }
 
     float getXVelocity(){
@@ -70,27 +71,29 @@ public class Ball {
     }
 
     void clearObstacleY(float y){//* TR get rid of casts
-        rect.bottom = (int)y;
-        rect.top = (int)(y - ballHeight);
+        rect.bottom = (int) y;
+        rect.top = (int) (y - ballHeight);
     }
 
     void clearObstacleX(float x){//* TR get rid of casts
-        rect.left = (int)x;
-        rect.right = (int)(x + ballWidth);
+        rect.left = (int) x;
+        rect.right = (int) (x + ballWidth);
     }
 
+
+    // Resetting ball position to center of the screen
     void reset(int x, int y){//* TR get rid of casts
         rect.left = x / 2;
-        rect.bottom = (int)(y - y * (float) 0.21 - ballHeight);
-
-        rect.top = (int)(rect.bottom+ballHeight);
-        rect.right = (int)(x / 2 + ballWidth);
-
+        rect.bottom = (int) (y - y * (float) 0.21 - ballHeight);
+        rect.top = (int) (rect.bottom + ballHeight);
+        rect.right = (int) (x / 2 + ballWidth);
     }
 
-    void setSpeedFactor(int level){
-        speedFactor = level;
-        xVelocity = originalVelocityX * speedFactor;
-        yVelocity = originalVelocityY * speedFactor;
+
+    // Update speed factor based on level
+    void setSpeedFactor(float sp){
+        //speedFactor = sp;
+        xVelocity = originalVelocityX * sp;
+        yVelocity = originalVelocityY * sp;
     }
 }
