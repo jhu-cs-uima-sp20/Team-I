@@ -75,6 +75,8 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     // Lives
     int lives = 3;
+    int level = 1;
+    boolean newGame = true;
 
     // Paddle speed
     int speed = 100;
@@ -155,6 +157,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     public void run() {
         while (playing) {
 
+
             // Capture the current time in milliseconds in startFrameTime
             long startFrameTime = System.currentTimeMillis();
 
@@ -214,17 +217,21 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         // Bounce the ball back when it hits the bottom of screen
         // And deduct a life
         if(ball.getRect().bottom > screenY){
-            ball.reverseYVelocity();
+            //ball.reverseYVelocity();
             ball.clearObstacleY(screenY - 2);
 
-            // Lose a life
-            lives --;
-            soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
 
-            if(lives == 0){
+            newGame = true;
+            // Lose a life
+            //lives --;
+            soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
+            paused = true;
+            restart();
+            /*if(lives == 0){
                 paused = true;
                 restart();
-            }
+                newGame == true;
+            }*/
 
         }
 
@@ -260,22 +267,30 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         // Pause if cleared screen
         if(score == numBricks * 10){
             paused = true;
+            level++;
+            ball.setSpeedFactor(level);
             restart();
         }
     }
 
     void restart(){
         // Put the ball back to the start
-        ball.reset(screenX, screenY);
 
-        int brickWidth = screenX / 8;
+        if (newGame == true) {
+            level = 1;
+            ball.setSpeedFactor(level);
+            newGame = false;
+        }
+        ball.reset(screenX, screenY);
+        paddle = new Paddle(screenX, screenY);
+        int brickWidth = screenX / 3;
         int brickHeight = screenY / 30;
 
         // Build a wall of bricks
         numBricks = 0;
 
-        for(int column = 0; column < 8; column ++ ){
-            for(int row = 0; row < 10; row ++ ){
+        for(int column = 0; column < 3; column ++ ){
+            for(int row = 0; row < 1; row ++ ){
                 bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight);
                 numBricks ++;
             }

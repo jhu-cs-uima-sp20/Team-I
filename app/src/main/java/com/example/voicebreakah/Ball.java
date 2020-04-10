@@ -10,14 +10,20 @@ public class Ball {
     private Rect rect; //* TR change to RectF
     private float xVelocity;
     private float yVelocity;
+    private float originalVelocityX;
+    private float originalVelocityY;
     private float ballWidth = 20;
     private float ballHeight = 20;
+    private float speedFactor;
 
     // constructor
     Ball(){
 
-        xVelocity = 200;
-        yVelocity = -400;
+        speedFactor = 1;
+        originalVelocityX = 200;
+        originalVelocityY = -400;
+        xVelocity = originalVelocityY*(speedFactor);
+        yVelocity = originalVelocityY*(speedFactor);
 
         //float x = screenX / 2;
         //float y = screenY - screenY * (float) 0.21;
@@ -80,5 +86,11 @@ public class Ball {
         rect.top = (int)(rect.bottom+ballHeight);
         rect.right = (int)(x / 2 + ballWidth);
 
+    }
+
+    void setSpeedFactor(int level){
+        speedFactor = level;
+        xVelocity = originalVelocityX * speedFactor;
+        yVelocity = originalVelocityY * speedFactor;
     }
 }
