@@ -14,7 +14,7 @@ public class Paddle {
 
     // X is the far left of the rectangle which forms our paddle
     private float x;
-
+    private int screenX;
     // This will hold the pixels per second speed that the paddle will move
     private float paddleSpeed;
 
@@ -33,7 +33,7 @@ public class Paddle {
         // 150 pixels wide and 40 pixels high
         length = 150;
         float height = 40;
-
+        this.screenX=screenX;
         // Start paddle in roughly the screen centre
         x = screenX / 2;
 
@@ -67,7 +67,10 @@ public class Paddle {
         if(paddleMoving == LEFT){
             x = x - paddleSpeed / fps;
         }
-
+        if(x<0)
+            x=0;
+        if(x+length>screenX)
+            x=screenX-length;
         if(paddleMoving == RIGHT){
             x = x + paddleSpeed / fps;
         }
