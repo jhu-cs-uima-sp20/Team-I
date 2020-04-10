@@ -46,6 +46,14 @@ public class Ball {
         xVelocity = -xVelocity;
     }
 
+    void setXVelocity(float newVelocity) {
+        xVelocity=newVelocity;
+    }
+
+    float getXVelocity(){
+        return xVelocity;
+    }
+
     void setRandomXVelocity(){
         Random generator = new Random();
         int answer = generator.nextInt(2);
