@@ -32,4 +32,5 @@ public class Brick {
     boolean getVisibility(){
         return isVisible;
     }
+
 }
