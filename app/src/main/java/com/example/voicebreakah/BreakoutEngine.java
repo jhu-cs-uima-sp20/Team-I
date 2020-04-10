@@ -76,6 +76,12 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     // Lives
     int lives = 3;
 
+    // Paddle speed
+    int speed = 100;
+
+    // player touching screen
+    boolean touching = false;
+
     // The constructor is called when the object is first created
     public BreakoutEngine(Context context, int x, int y) {
         // This calls the default constructor to setup the rest of the object
@@ -174,10 +180,14 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     private void update(){
         // Move the paddle if required
-        paddle.update(fps);
+        paddle.update(fps, speed);
 
         // Update the ball
         ball.update(fps);
+
+        if (touching) {
+            speed += 15;
+        }
 
         // Check for ball colliding with a brick
         for(int i = 0; i < numBricks; i++){
@@ -333,13 +343,13 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         // Our code here
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+        switch (motionEvent.getActionMasked()) {
 
             // Player has touched the screen
             case MotionEvent.ACTION_DOWN:
 
                 paused = false;
-
+                touching = true;
                 if(motionEvent.getX() > screenX / 2){
                     paddle.setMovementState(paddle.RIGHT);
                 }
@@ -351,6 +361,8 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
             // Player has removed finger from screen
             case MotionEvent.ACTION_UP:
+                touching = false;
+                speed = 100;
                 paddle.setMovementState(paddle.STOPPED);
                 break;
         }
