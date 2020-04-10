@@ -43,7 +43,7 @@ public class Paddle {
         rect = new Rect((int)x, (int)y, (int)(x + length), (int)(y + height)); //* to reverse get rid of (int)
 
         // How fast is the paddle in pixels per second
-        paddleSpeed = 350;
+        paddleSpeed = 1000;
         //Drawable drawable = getResources().getDrawable(R.drawable.my_drawable);
         //drawable.setBounds(rect);
         //drawable.draw(canvas);
