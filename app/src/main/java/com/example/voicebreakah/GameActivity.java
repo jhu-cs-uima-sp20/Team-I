@@ -45,5 +45,6 @@ public class GameActivity extends AppCompatActivity {
 
         // Tell the gameView pause method to execute
         breakoutEngine.pause();
+
     }
 }
