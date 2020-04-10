@@ -63,7 +63,8 @@ public class Paddle {
     // This update method will be called from update in BreakoutEngine
     // It determines if the paddle needs to move and changes the coordinates
     // contained in rect if necessary
-    void update(long fps){
+    void update(long fps, int speed){
+        paddleSpeed = speed;
         if(paddleMoving == LEFT){
             x = x - paddleSpeed / fps;
         }
