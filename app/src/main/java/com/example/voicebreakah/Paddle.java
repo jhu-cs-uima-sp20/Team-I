@@ -1,18 +1,20 @@
 package com.example.voicebreakah;
 
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 
 public class Paddle {
 
     // RectF is an object that holds four coordinates - just what we need
-    private RectF rect;
+    private Rect rect; //*
 
     // How long will our paddle will be
     private float length;
 
     // X is the far left of the rectangle which forms our paddle
     private float x;
-
+    private int screenX;
     // This will hold the pixels per second speed that the paddle will move
     private float paddleSpeed;
 
@@ -28,27 +30,30 @@ public class Paddle {
     // When we create an object from this class we will pass
     // in the screen width and height
     Paddle(int screenX, int screenY){
-        // 130 pixels wide and 20 pixels high
-        length = 130;
-        float height = 20;
-
+        // 150 pixels wide and 40 pixels high
+        length = 150;
+        float height = 40;
+        this.screenX=screenX;
         // Start paddle in roughly the screen centre
         x = screenX / 2;
 
         // Y is the top coordinate
         float y = screenY - screenY * (float) 0.2;
 
-        rect = new RectF(x, y, x + length, y + height);
+        rect = new Rect((int)x, (int)y, (int)(x + length), (int)(y + height)); //* to reverse get rid of (int)
 
         // How fast is the paddle in pixels per second
-        paddleSpeed = 350;
+        paddleSpeed = 1000;
+        //Drawable drawable = getResources().getDrawable(R.drawable.my_drawable);
+        //drawable.setBounds(rect);
+        //drawable.draw(canvas);
     }
 
     // This is a getter method to make the rectangle that
     // defines our paddle available in BreakoutView class
-    RectF getRect(){
+    Rect getRect(){
         return rect;
-    }
+    } //* to reverse make return type RectF
 
     // This method will be used to change/set if the paddle is going left, right or nowhere
     void setMovementState(int state){
@@ -62,12 +67,15 @@ public class Paddle {
         if(paddleMoving == LEFT){
             x = x - paddleSpeed / fps;
         }
-
+        if(x<0)
+            x=0;
+        if(x+length>screenX)
+            x=screenX-length;
         if(paddleMoving == RIGHT){
             x = x + paddleSpeed / fps;
         }
 
-        rect.left = x;
-        rect.right = x + length;
+        rect.left = (int) x; //* to reverse get rid of (int)
+        rect.right = (int)(x + length); //* ^
     }
 }

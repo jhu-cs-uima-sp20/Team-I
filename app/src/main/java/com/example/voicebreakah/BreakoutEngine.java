@@ -3,10 +3,15 @@ package com.example.voicebreakah;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Picture;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.util.Log;
@@ -179,7 +184,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
             if (bricks[i].getVisibility()){
 
-                if(RectF.intersects(bricks[i].getRect(),ball.getRect())) {
+                if(Rect.intersects(bricks[i].getRect(),ball.getRect())) {//*change to RectF.intersects
                     bricks[i].setInvisible();
                     ball.reverseYVelocity();
                     score = score + 10;
@@ -189,10 +194,11 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         }
 
         // Check for ball colliding with paddle
-        if(RectF.intersects(paddle.getRect(),ball.getRect())) {
-            ball.setRandomXVelocity();
+        if(Rect.intersects(paddle.getRect(),ball.getRect())) { //*change to RectF.intersects
+            //ball.setRandomXVelocity();
+            ball.setXVelocity(ball.getXVelocity());
             ball.reverseYVelocity();
-            ball.clearObstacleY(paddle.getRect().top - 2);
+            ball.clearObstacleY(paddle.getRect().top - 10);
             soundPool.play(beep1ID, 1, 1, 0, 0, 1);
         }
 
@@ -228,9 +234,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         }
 
         // If the ball hits right wall bounce
-        if(ball.getRect().right > screenX - 10){
+        if(ball.getRect().right > screenX - 20){
             ball.reverseXVelocity();
-            ball.clearObstacleX(screenX - 22);
+            ball.clearObstacleX(screenX - 42);
             soundPool.play(beep3ID, 1, 1, 0, 0, 1);
         }
 
@@ -279,21 +285,30 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             canvas = ourHolder.lockCanvas();
 
             // Draw the background color
-            canvas.drawColor(Color.argb(255,  26, 128, 182));
+            canvas.drawColor(Color.argb(255,  140, 207, 255));
 
             // Draw everything to the screen
 
             // Choose the brush color for drawing
-            paint.setColor(Color.argb(255,  255, 255, 255));
-
+            paint.setColor(Color.argb(255,  242, 12, 12));
+            //Drawable paddle_pic = getResources().getDrawable(R.drawable.paddle_pink);
+            //drawable.setBounds(myRect);
+            //drawable.draw(canvas);
+            Resources res = getResources();
+            Drawable d = res.getDrawable(R.drawable.paddle_pink);
+            //PictureDrawable paddle_pic = new PictureDrawable(drawable);
             // Draw the paddle
-            canvas.drawRect(paddle.getRect(), paint);
+            d.setBounds((paddle.getRect()));
+            d.draw(canvas);
+
+            //canvas.drawRect(paddle.getRect(), paint);
+            //canvas.drawPicture(drawable,paddle.getRect());
 
             // Draw the ball
             canvas.drawRect(ball.getRect(), paint);
 
             // Change the brush color for drawing
-            paint.setColor(Color.argb(255,  249, 129, 0));
+            paint.setColor(Color.argb(255,  255, 255, 255));
 
             // Draw the bricks if visible
             for(int i = 0; i < numBricks; i++){
@@ -304,11 +319,11 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
             // Draw the HUD
             // Choose the brush color for drawing
-            paint.setColor(Color.argb(255,  255, 255, 255));
+            paint.setColor(Color.argb(255,  0, 0, 0));
 
             // Draw the score
             paint.setTextSize(70);
-            canvas.drawText("Score: " + score + "   Lives: " + lives, 10,80, paint);
+            //canvas.drawText("Score: " + score + "   Lives: " + lives, 10,80, paint);
             // Show everything we have drawn
             ourHolder.unlockCanvasAndPost(canvas);
         }
@@ -318,12 +333,10 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     // So we can override this method and detect screen touches.
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        // Our code here
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
 
             // Player has touched the screen
             case MotionEvent.ACTION_DOWN:
-
                 paused = false;
 
                 if(motionEvent.getX() > screenX / 2){

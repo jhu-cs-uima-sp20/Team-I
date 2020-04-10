@@ -1,10 +1,11 @@
 package com.example.voicebreakah;
 
+import android.graphics.Rect;
 import android.graphics.RectF;
 
 public class Brick {
 
-    private RectF rect;
+    private Rect rect; //* TRhange to RectF
 
     private boolean isVisible;
 
@@ -14,15 +15,15 @@ public class Brick {
 
         int padding = 1;
 
-        rect = new RectF(column * width + padding,
-                row * height + padding,
-                column * width + width - padding,
-                row * height + height - padding);
+        rect = new Rect((int)(column * width + padding), //* TR get rid of casts and change to RectF
+                (int)(row * height + padding),
+                (int)(column * width + width - padding),
+                (int)(row * height + height - padding));
     }
 
-    RectF getRect(){
+    Rect getRect(){
         return this.rect;
-    }
+    } //* TR change to RectF
 
     void setInvisible(){
         isVisible = false;
