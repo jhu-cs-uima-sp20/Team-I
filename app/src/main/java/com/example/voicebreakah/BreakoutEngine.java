@@ -75,6 +75,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     // Lives
     int lives = 3;
+    int level = 1;
 
     // The constructor is called when the object is first created
     public BreakoutEngine(Context context, int x, int y) {
@@ -148,6 +149,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     @Override
     public void run() {
         while (playing) {
+
 
             // Capture the current time in milliseconds in startFrameTime
             long startFrameTime = System.currentTimeMillis();
@@ -250,7 +252,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         // Pause if cleared screen
         if(score == numBricks * 10){
-            paused = true;
+            //paused = true;
+            level++;
+            ball.setSpeedFactor(level);
             restart();
         }
     }
@@ -266,7 +270,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         numBricks = 0;
 
         for(int column = 0; column < 8; column ++ ){
-            for(int row = 0; row < 10; row ++ ){
+            for(int row = 0; row < 4; row ++ ){
                 bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight);
                 numBricks ++;
             }

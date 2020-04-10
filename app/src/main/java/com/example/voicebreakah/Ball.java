@@ -12,12 +12,14 @@ public class Ball {
     private float yVelocity;
     private float ballWidth = 20;
     private float ballHeight = 20;
+    private float speedFactor;
 
     // constructor
     Ball(){
 
-        xVelocity = 200;
-        yVelocity = -400;
+        speedFactor = 1;
+        xVelocity = 200*(speedFactor);
+        yVelocity = -400*(speedFactor);
 
         //float x = screenX / 2;
         //float y = screenY - screenY * (float) 0.21;
@@ -80,5 +82,11 @@ public class Ball {
         rect.top = (int)(rect.bottom+ballHeight);
         rect.right = (int)(x / 2 + ballWidth);
 
+    }
+
+    void setSpeedFactor(int level){
+        speedFactor = level;
+        xVelocity *= speedFactor;
+        yVelocity *= speedFactor;
     }
 }
