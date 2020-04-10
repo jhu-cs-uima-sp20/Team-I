@@ -8,6 +8,18 @@
     tools:context=".Settings">
 
     <ImageView
+        android:id="@+id/iv_settings_title"
+        android:layout_width="282dp"
+        android:layout_height="72dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"
+        app:srcCompat="@drawable/settings_title_transparent" />
+
+    <ImageView
         android:id="@+id/imageView"
         android:layout_width="300dp"
         android:layout_height="450dp"
@@ -20,20 +32,6 @@
         app:layout_constraintVertical_bias="0.498"
         app:srcCompat="@android:color/background_light" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/settings"
-        android:textColor="@color/colorYellow"
-        android:textSize="50sp"
-        app:layout_constraintBottom_toTopOf="@+id/imageView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.575" />
-
     <ImageView
         android:id="@+id/settings_back_arrow"
         android:layout_width="40dp"
@@ -45,7 +43,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/back_arrow" />
+        app:srcCompat="@drawable/back_arrow_transparent" />
 
     <Switch
         android:id="@+id/switch1"
@@ -205,4 +203,5 @@
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintHorizontal_bias="0.568"
         app:layout_constraintStart_toEndOf="@+id/textView4" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
