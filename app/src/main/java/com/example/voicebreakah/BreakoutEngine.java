@@ -195,7 +195,8 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         // Check for ball colliding with paddle
         if(Rect.intersects(paddle.getRect(),ball.getRect())) { //*change to RectF.intersects
-            ball.setRandomXVelocity();
+            //ball.setRandomXVelocity();
+            ball.setXVelocity(ball.getXVelocity());
             ball.reverseYVelocity();
             ball.clearObstacleY(paddle.getRect().top - 10);
             soundPool.play(beep1ID, 1, 1, 0, 0, 1);
@@ -332,12 +333,10 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     // So we can override this method and detect screen touches.
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        // Our code here
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
 
             // Player has touched the screen
             case MotionEvent.ACTION_DOWN:
-
                 paused = false;
 
                 if(motionEvent.getX() > screenX / 2){
