@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 
 public class GameActivity extends AppCompatActivity {
 
-    BreakoutEngine breakoutEngine;
+    private BreakoutEngine breakoutEngine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +33,6 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        // Tell the gameView resume method to execute
         breakoutEngine.resume();
     }
 
@@ -42,8 +40,6 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
-        // Tell the gameView pause method to execute
         breakoutEngine.pause();
     }
 }

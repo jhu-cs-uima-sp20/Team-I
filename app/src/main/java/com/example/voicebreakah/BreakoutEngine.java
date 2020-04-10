@@ -46,6 +46,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     // SharedPreferences for highscore
     private SharedPreferences myPrefs;
+    private Context context;
 
     // Width and height of screen
     private int screenX;
@@ -104,6 +105,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         Log.d("engine", "we're in engine");
 
         myPrefs = context.getSharedPreferences("PREFS",Context.MODE_PRIVATE);
+        this.context = context;
 
         // Initialize ourHolder and paint objects
         ourHolder = getHolder();
@@ -281,7 +283,15 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     }
 
 
-    /** when starting a new game */
+    // can use later, when have new game option instead of returning to main
+    private void newGame() {
+        gameOver = false;
+        score = 0;
+        restart();
+    }
+
+
+    /** when starting a new level */
     void restart(){
         Log.d("restart", "restart, " + speedFactor);
 
@@ -379,32 +389,34 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         // Our code here
-        if (!gameOver) {
-            switch (motionEvent.getActionMasked()) {
-                // Player has touched the screen
-                case MotionEvent.ACTION_DOWN:
-                    paused = false;
-                    touching = true;
-                    if (motionEvent.getX() > screenX / (float) 2) {
-                        paddle.setMovementState(paddle.RIGHT);
-                    } else {
-                        paddle.setMovementState(paddle.LEFT);
-                    }
-                    break;
+        switch (motionEvent.getActionMasked()) {
+            // Player has touched the screen
+            case MotionEvent.ACTION_DOWN:
+                paused = false;
+                touching = true;
+                if (motionEvent.getX() > screenX / (float) 2) {
+                    paddle.setMovementState(paddle.RIGHT);
+                } else {
+                    paddle.setMovementState(paddle.LEFT);
+                }
+                break;
 
-                // Player has removed finger from screen
-                case MotionEvent.ACTION_UP:
-                    touching = false;
-                    speed = 100;
-                    paddle.setMovementState(paddle.STOPPED);
-                    break;
-            }
-        } else {
+            // Player has removed finger from screen
+            case MotionEvent.ACTION_UP:
+                touching = false;
+                speed = 100;
+                paddle.setMovementState(paddle.STOPPED);
+                break;
+        }
+
+        // if game over, return to main screen
+        if (gameOver) {
             if (MotionEvent.ACTION_DOWN == 0) {
-                gameOver = false;
-                restart();
+                //newGame();
+                context.startActivity(new Intent(context,MainActivity.class));
             }
         }
+
         return true;
     }
 }
