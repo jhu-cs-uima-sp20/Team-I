@@ -10,11 +10,8 @@ public class Brick {
     private boolean isVisible;
 
     Brick(int row, int column, int width, int height){
-
         isVisible = true;
-
         int padding = 1;
-
         rect = new Rect((int)(column * width + padding), //* TR get rid of casts and change to RectF
                 (int)(row * height + padding),
                 (int)(column * width + width - padding),
@@ -32,4 +29,5 @@ public class Brick {
     boolean getVisibility(){
         return isVisible;
     }
+
 }

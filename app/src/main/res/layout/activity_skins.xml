@@ -7,18 +7,17 @@
     android:background="@color/colorBlue"
     tools:context=".Skins">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/skins"
-        android:textColor="@color/colorYellow"
-        android:textSize="50sp"
+    <ImageView
+        android:id="@+id/iv_skins_title"
+        android:layout_width="210dp"
+        android:layout_height="65dp"
         app:layout_constraintBottom_toTopOf="@+id/whiteBox"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.566"
+        app:srcCompat="@drawable/skins_title_transparent" />
 
     <ImageView
         android:id="@+id/whiteBox"
@@ -28,10 +27,9 @@
         android:background="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.498"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.622"
         app:srcCompat="@android:color/background_light" />
 
     <ImageView
@@ -46,7 +44,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/back_arrow" />
+        app:srcCompat="@drawable/back_arrow_transparent" />
 
     <ImageView
         android:id="@+id/pinkSkin"
