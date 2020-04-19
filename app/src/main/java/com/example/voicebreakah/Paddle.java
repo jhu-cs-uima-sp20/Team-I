@@ -37,8 +37,8 @@ public class Paddle {
     Paddle(int screenX, int screenY){
         this.screenX = screenX;
 
-        length = 150;   // 150 pixels wide
-        float height = 40;  // and 40 pixels high
+        length = 270;   // originally 150 pixels wide
+        float height = 90;  // originally 40 pixels high
         x = screenX / 2;  // Start paddle in roughly the screen centre
         float y = screenY - screenY * (float) 0.2;  // Y is the top coordinate
 
