@@ -14,10 +14,9 @@ public class Paddle {
 
     // X is the far left of the rectangle which forms our paddle
     private float x;
-    private int screenX;
+    
     // This will hold the pixels per second speed that the paddle will move
     private float paddleSpeed;
-
 
     private float screenX;
 
@@ -35,7 +34,7 @@ public class Paddle {
 
 
     /** constructor method
-     * @param screenX screen wdith
+     * @param screenX screen width
      * @param screenY screen height
      */
     Paddle(int screenX, int screenY){
