@@ -40,4 +40,8 @@
     <dimen name="new_skin_btn_width">60dp</dimen>
     <dimen name="new_skin_btn_height">60dp</dimen>
 
+    <dimen name="new_skin_box_height">675dp</dimen>
+    <dimen name="new_skin_paddle_width">210dp</dimen>
+    <dimen name="new_skin_paddle_height">84dp</dimen>
+
 </resources>
