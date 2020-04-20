@@ -65,24 +65,21 @@ public class MainActivity extends AppCompatActivity {
 
         newUser = myPrefs.getBoolean("newUser",true);
         if(newUser){
-            peditor.putBoolean("newUser",false);
             Set<String> paddleIDs = new HashSet();
             paddleIDs.add("00");
             peditor.putStringSet("paddleSkinSet",paddleIDs);
+            peditor.putBoolean("newUser",false);
             paddleIndex = 0;
+
         }
         else{
             paddleIndex = myPrefs.getInt("currPaddleIndex",0);
         }
-
         peditor.commit();
 
 
-        Set<ImageView> paddleViews = new HashSet();
         res = getResources();
         paddleView = findViewById(R.id.paddleView);
-
-
 
         ImageView rightButton = findViewById(R.id.rightButtonView);
         ImageView leftButton = findViewById(R.id.leftButtonView);

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +28,7 @@ public class openNewSkin extends AppCompatActivity {
     private String[] allPaddles = {"00","01","02","03","04","05","06","07","08","09"};
     private String[] myPaddles;
     int newPaddleIndex;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

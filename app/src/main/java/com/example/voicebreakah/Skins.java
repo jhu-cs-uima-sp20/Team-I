@@ -26,7 +26,6 @@ public class Skins extends AppCompatActivity {
     private Context context;
     private Resources res;
     private Set<String> myPaddleSet;
-    //Set<ImageView> paddleViews;
     ImageView[] skinViews;
     Object[] myPaddles;
 
@@ -43,7 +42,6 @@ public class Skins extends AppCompatActivity {
         peditor = myPrefs.edit();
         res = getResources();
 
-        //paddleViews = new HashSet();
         ImageView skin0 = findViewById(R.id.skin0);
         ImageView skin1 = findViewById(R.id.skin1);
         ImageView skin2 = findViewById(R.id.skin2);
