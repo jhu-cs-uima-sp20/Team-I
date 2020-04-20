@@ -3,11 +3,14 @@ package com.example.voicebreakah;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,6 +28,10 @@ public class Skins extends AppCompatActivity {
     private Set<String> myPaddleSet;
     //Set<ImageView> paddleViews;
     ImageView[] skinViews;
+    Object[] myPaddles;
+
+
+    AnimationDrawable treasureAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +42,6 @@ public class Skins extends AppCompatActivity {
         myPrefs = context.getSharedPreferences("PREFS", Context.MODE_PRIVATE);
         peditor = myPrefs.edit();
         res = getResources();
-
 
         //paddleViews = new HashSet();
         ImageView skin0 = findViewById(R.id.skin0);
@@ -50,34 +56,6 @@ public class Skins extends AppCompatActivity {
         ImageView skin9 = findViewById(R.id.skin9);
         ImageView[] temp = {skin0, skin1, skin2, skin3, skin4, skin5, skin6, skin7, skin8, skin9};
         skinViews = temp;
-        /*paddleViews.add(skin0);
-        paddleViews.add(skin1);
-        paddleViews.add(skin2);
-        paddleViews.add(skin3);
-        paddleViews.add(skin4);
-        paddleViews.add(skin5);
-        paddleViews.add(skin6);
-        paddleViews.add(skin7);
-        paddleViews.add(skin8);
-        paddleViews.add(skin9);*/
-
-        myPaddleSet = myPrefs.getStringSet("paddleSkinSet",null);
-        Object[] myPaddles = myPaddleSet.toArray(new String[myPaddleSet.size()]);
-
-        for (int i = 0;i < myPaddles.length && i < skinViews.length; i++ ){
-            String paddleSkinName = "paddle_" + myPaddles[i];
-            Drawable d = res.getDrawable(getResources().getIdentifier(paddleSkinName, "drawable", "com.example.voicebreakah"));
-            skinViews[i].setImageDrawable(d);
-        }
-        /*if(paddleIDs!=null) {
-            Iterator<String> skinIterator = paddleIDs.iterator();
-            //Iterator<ImageView> viewIterator = paddleViews.iterator();
-            while (skinIterator.hasNext() && viewIterator.hasNext()) {
-                String paddleSkinName = "paddle_" + skinIterator.next();
-                Drawable d = res.getDrawable(getResources().getIdentifier(paddleSkinName, "drawable", "com.example.voicebreakah"));
-                viewIterator.next().setImageDrawable(d);
-            }
-        }*/
 
         ImageView backArrow = findViewById(R.id.skins_back_arrow);
         backArrow.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +64,35 @@ public class Skins extends AppCompatActivity {
                 finish();
             }
         });
+
+        ImageView newSkinsButton = findViewById(R.id.new_skin_button);
+        newSkinsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(myPaddles.length != skinViews.length) {
+                    Intent intent = new Intent(Skins.this, openNewSkin.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+
     }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        myPaddleSet = myPrefs.getStringSet("paddleSkinSet",null);
+        myPaddles = myPaddleSet.toArray(new String[myPaddleSet.size()]);
+
+        for (int i = 0;i < myPaddles.length && i < skinViews.length; i++ ){
+            String paddleSkinName = "paddle_" + myPaddles[i];
+            Drawable d = res.getDrawable(getResources().getIdentifier(paddleSkinName, "drawable", "com.example.voicebreakah"));
+            skinViews[i].setImageDrawable(d);
+        }
+    }
+
+
+
 
 }

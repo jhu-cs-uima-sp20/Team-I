@@ -67,8 +67,7 @@ public class MainActivity extends AppCompatActivity {
         if(newUser){
             peditor.putBoolean("newUser",false);
             Set<String> paddleIDs = new HashSet();
-            paddleIDs.add("pink");
-            paddleIDs.add("grass");
+            paddleIDs.add("00");
             peditor.putStringSet("paddleSkinSet",paddleIDs);
             paddleIndex = 0;
         }
@@ -80,14 +79,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         Set<ImageView> paddleViews = new HashSet();
-
-        Set<String> paddleIDSet = myPrefs.getStringSet("paddleSkinSet",null);
-        paddleIDs = paddleIDSet.toArray(new String[paddleIDSet.size()]);
-
-        paddleView = findViewById(R.id.paddleView);
         res = getResources();
-        Drawable d = res.getDrawable(getResources().getIdentifier("paddle_"+paddleIDs[paddleIndex], "drawable", "com.example.voicebreakah"));
-        paddleView.setImageDrawable(d);
+        paddleView = findViewById(R.id.paddleView);
 
 
 
@@ -105,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
         TextView highscore = (TextView) findViewById(R.id.tv_highscore_val);
         int score = myPrefs.getInt("highscore", 0);
         highscore.setText(Integer.toString(score));
+
+
+        Set<String> paddleIDSet = myPrefs.getStringSet("paddleSkinSet",null);
+        paddleIDs = paddleIDSet.toArray(new String[paddleIDSet.size()]);
 
         paddleIndex = myPrefs.getInt("currPaddleIndex",0);
         Drawable d = res.getDrawable(getResources().getIdentifier("paddle_"+paddleIDs[paddleIndex], "drawable", "com.example.voicebreakah"));
