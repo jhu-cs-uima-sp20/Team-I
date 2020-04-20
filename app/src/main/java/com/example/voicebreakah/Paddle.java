@@ -14,7 +14,7 @@ public class Paddle {
 
     // X is the far left of the rectangle which forms our paddle
     private float x;
-    
+
     // This will hold the pixels per second speed that the paddle will move
     private float paddleSpeed;
 
@@ -27,10 +27,6 @@ public class Paddle {
 
     // Is the paddle moving and in which direction
     private int paddleMoving = STOPPED;
-
-
-  
-  
 
 
     /** constructor method
