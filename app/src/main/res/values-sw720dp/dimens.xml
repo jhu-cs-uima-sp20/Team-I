@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- main screen -->
+    <dimen name="title_width">652dp</dimen>
+    <dimen name="title_height">400dp</dimen>
+    <dimen name="play_btn_width">348dp</dimen>
+    <dimen name="play_btn_height">150dp</dimen>
+    <dimen name="settings_btn_width">180dp</dimen>
+    <dimen name="settings_btn_height">60dp</dimen>
+    <dimen name="skins_btn_width">150dp</dimen>
+    <dimen name="skins_btn_height">60dp</dimen>
+    <dimen name="paddle_width">270dp</dimen>
+    <dimen name="paddle_height">90dp</dimen>
+    <dimen name="tri_dimen">60dp</dimen>
+    <dimen name="highscore_txt_size">32sp</dimen>
+</resources>
