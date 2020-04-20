@@ -14,6 +14,9 @@
     <dimen name="tri_dimen">40dp</dimen>
     <dimen name="highscore_txt_size">15sp</dimen>
 
+
+    <dimen name="back_btn_dimen">25dp</dimen>
+
     <!-- settings page -->
     <dimen name="settings_width">288dp</dimen>
     <dimen name="settings_height">60dp</dimen>
@@ -25,6 +28,16 @@
     <dimen name="highlight_height">30dp</dimen>
     <dimen name="settings_txt_size">18sp</dimen>
 
-    <dimen name="back_btn_dimen">25dp</dimen>
+
+    <!-- skins page -->
+    <dimen name="skins_width">210dp</dimen>
+    <dimen name="skins_height">60dp</dimen>
+    <dimen name="skins_box_width">300dp</dimen>
+    <dimen name="skins_box_height">400dp</dimen>
+    <dimen name="skins_paddle_width">100dp</dimen>
+    <dimen name="skins_paddle_height">40dp</dimen>
+    <dimen name="new_skin_btn_width">60dp</dimen>
+    <dimen name="new_skin_btn_height">60dp</dimen>
+
 
 </resources>
