@@ -14,6 +14,17 @@
     <dimen name="tri_dimen">40dp</dimen>
     <dimen name="highscore_txt_size">15sp</dimen>
 
+    <!-- settings page -->
+    <dimen name="settings_width">288dp</dimen>
+    <dimen name="settings_height">60dp</dimen>
+    <dimen name="settings_box_width">300dp</dimen>
+    <dimen name="settings_box_height">450dp</dimen>
+    <dimen name="theme_width">50dp</dimen>
+    <dimen name="theme_height">60dp</dimen>
+    <dimen name="highlight_width">70dp</dimen>
+    <dimen name="highlight_height">30dp</dimen>
+    <dimen name="settings_txt_size">18sp</dimen>
 
+    <dimen name="back_btn_dimen">25dp</dimen>
 
 </resources>

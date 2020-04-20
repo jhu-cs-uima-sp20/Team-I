@@ -13,4 +13,17 @@
     <dimen name="paddle_height">90dp</dimen>
     <dimen name="tri_dimen">60dp</dimen>
     <dimen name="highscore_txt_size">32sp</dimen>
+
+    <!-- settings page -->
+    <dimen name="settings_width">576dp</dimen>
+    <dimen name="settings_height">120dp</dimen>
+    <dimen name="settings_box_width">585dp</dimen>
+    <dimen name="settings_box_height">878dp</dimen>
+    <dimen name="theme_width">85dp</dimen>
+    <dimen name="theme_height">102dp</dimen>
+    <dimen name="highlight_width">130dp</dimen>
+    <dimen name="highlight_height">55dp</dimen>
+    <dimen name="settings_txt_size">36sp</dimen>
+
+    <dimen name="back_btn_dimen">52dp</dimen>
 </resources>
