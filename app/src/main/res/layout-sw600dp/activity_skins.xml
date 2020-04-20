@@ -51,11 +51,12 @@
         android:id="@+id/skin0"
         android:layout_width="@dimen/skins_paddle_width"
         android:layout_height="@dimen/skins_paddle_height"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="28dp"
+        app:layout_constraintBottom_toBottomOf="@+id/whiteBox"
+        app:layout_constraintEnd_toEndOf="@+id/whiteBox"
+        app:layout_constraintHorizontal_bias="0.183"
         app:layout_constraintStart_toStartOf="@+id/whiteBox"
         app:layout_constraintTop_toTopOf="@+id/whiteBox"
+        app:layout_constraintVertical_bias="0.079"
         app:srcCompat="@drawable/brick_white" />
 
     <ImageView
@@ -63,18 +64,18 @@
         android:layout_width="@dimen/skins_paddle_width"
         android:layout_height="@dimen/skins_paddle_height"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/skin0"
+        app:layout_constraintEnd_toEndOf="@+id/whiteBox"
+        app:layout_constraintHorizontal_bias="0.352"
         app:layout_constraintStart_toEndOf="@+id/skin0"
-        app:layout_constraintTop_toTopOf="@+id/whiteBox"
         app:srcCompat="@drawable/brick_white" />
 
     <ImageView
         android:id="@+id/skin2"
         android:layout_width="@dimen/skins_paddle_width"
         android:layout_height="@dimen/skins_paddle_height"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintStart_toStartOf="@+id/whiteBox"
+        android:layout_marginTop="44dp"
+        app:layout_constraintStart_toStartOf="@+id/skin0"
         app:layout_constraintTop_toBottomOf="@+id/skin0"
         app:srcCompat="@drawable/brick_white" />
 
@@ -83,18 +84,18 @@
         android:layout_width="@dimen/skins_paddle_width"
         android:layout_height="@dimen/skins_paddle_height"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/skin2"
+        app:layout_constraintEnd_toEndOf="@+id/skin1"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/skin2"
-        app:layout_constraintTop_toBottomOf="@+id/skin0"
         app:srcCompat="@drawable/brick_white" />
 
     <ImageView
         android:id="@+id/skin4"
         android:layout_width="@dimen/skins_paddle_width"
         android:layout_height="@dimen/skins_paddle_height"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintStart_toStartOf="@+id/whiteBox"
+        android:layout_marginTop="44dp"
+        app:layout_constraintStart_toStartOf="@+id/skin2"
         app:layout_constraintTop_toBottomOf="@+id/skin2"
         app:srcCompat="@drawable/brick_white" />
 
@@ -103,18 +104,18 @@
         android:layout_width="@dimen/skins_paddle_width"
         android:layout_height="@dimen/skins_paddle_height"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/skin4"
+        app:layout_constraintEnd_toEndOf="@+id/skin3"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/skin4"
-        app:layout_constraintTop_toBottomOf="@+id/skin2"
         app:srcCompat="@drawable/brick_white" />
 
     <ImageView
         android:id="@+id/skin6"
         android:layout_width="@dimen/skins_paddle_width"
         android:layout_height="@dimen/skins_paddle_height"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintStart_toStartOf="@+id/whiteBox"
+        android:layout_marginTop="44dp"
+        app:layout_constraintStart_toStartOf="@+id/skin4"
         app:layout_constraintTop_toBottomOf="@+id/skin4"
         app:srcCompat="@drawable/brick_white" />
 
@@ -122,19 +123,20 @@
         android:id="@+id/skin7"
         android:layout_width="@dimen/skins_paddle_width"
         android:layout_height="@dimen/skins_paddle_height"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginStart="164dp"
+        android:layout_marginLeft="164dp"
+        app:layout_constraintBottom_toBottomOf="@+id/skin6"
+        app:layout_constraintEnd_toEndOf="@+id/skin5"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/skin6"
-        app:layout_constraintTop_toBottomOf="@+id/skin4"
         app:srcCompat="@drawable/brick_white" />
 
     <ImageView
         android:id="@+id/skin8"
         android:layout_width="@dimen/skins_paddle_width"
         android:layout_height="@dimen/skins_paddle_height"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintStart_toStartOf="@+id/whiteBox"
+        android:layout_marginTop="44dp"
+        app:layout_constraintStart_toStartOf="@+id/skin6"
         app:layout_constraintTop_toBottomOf="@+id/skin6"
         app:srcCompat="@drawable/brick_white" />
 
@@ -143,19 +145,21 @@
         android:layout_width="@dimen/skins_paddle_width"
         android:layout_height="@dimen/skins_paddle_height"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/skin8"
+        app:layout_constraintEnd_toEndOf="@+id/skin7"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/skin8"
-        app:layout_constraintTop_toBottomOf="@+id/skin6"
         app:srcCompat="@drawable/brick_white" />
 
     <ImageView
         android:id="@+id/new_skin_button"
         android:layout_width="@dimen/skins_btn_width"
         android:layout_height="@dimen/skins_btn_height"
-        android:layout_marginTop="20dp"
         android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/whiteBox"
         app:layout_constraintTop_toBottomOf="@+id/whiteBox"
+        app:layout_constraintVertical_bias="0.107"
         app:srcCompat="@drawable/skins_button_transparent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

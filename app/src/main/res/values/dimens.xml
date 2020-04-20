@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- main screen -->
+    <dimen name="title_width">350dp</dimen>
+    <dimen name="title_height">215dp</dimen>
+    <dimen name="play_btn_width">200dp</dimen>
+    <dimen name="play_btn_height">90dp</dimen>
+    <dimen name="settings_btn_width">120dp</dimen>
+    <dimen name="settings_btn_height">40dp</dimen>
+    <dimen name="skins_btn_width">100dp</dimen>
+    <dimen name="skins_btn_height">40dp</dimen>
+    <dimen name="paddle_width">120dp</dimen>
+    <dimen name="paddle_height">40dp</dimen>
+    <dimen name="tri_dimen">40dp</dimen>
+    <dimen name="highscore_txt_size">15sp</dimen>
+
+
+    <dimen name="back_btn_dimen">25dp</dimen>
+
+    <!-- settings page -->
+    <dimen name="settings_width">288dp</dimen>
+    <dimen name="settings_height">60dp</dimen>
+    <dimen name="settings_box_width">300dp</dimen>
+    <dimen name="settings_box_height">450dp</dimen>
+    <dimen name="theme_width">50dp</dimen>
+    <dimen name="theme_height">60dp</dimen>
+    <dimen name="highlight_width">70dp</dimen>
+    <dimen name="highlight_height">30dp</dimen>
+    <dimen name="settings_txt_size">18sp</dimen>
+
+
+    <!-- skins page -->
+    <dimen name="skins_width">210dp</dimen>
+    <dimen name="skins_height">60dp</dimen>
+    <dimen name="skins_box_width">300dp</dimen>
+    <dimen name="skins_box_height">400dp</dimen>
+    <dimen name="skins_paddle_width">100dp</dimen>
+    <dimen name="skins_paddle_height">40dp</dimen>
+    <dimen name="new_skin_btn_width">60dp</dimen>
+    <dimen name="new_skin_btn_height">60dp</dimen>
+
+    <dimen name="new_skin_box_height">450dp</dimen>
+    <dimen name="new_skin_paddle_width">150dp</dimen>
+    <dimen name="new_skin_paddle_height">60dp</dimen>
+
+
+
+
+</resources>
