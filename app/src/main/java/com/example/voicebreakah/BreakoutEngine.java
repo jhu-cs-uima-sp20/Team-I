@@ -23,6 +23,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.io.IOException;
+import java.util.Set;
 
 class BreakoutEngine extends SurfaceView implements Runnable{
 
@@ -46,6 +47,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     // SharedPreferences for highscore
     private SharedPreferences myPrefs;
+    private SharedPreferences.Editor peditor;
     private Context context;
 
     // Width and height of screen
@@ -60,6 +62,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     // The player's paddle
     Paddle paddle;
+    Drawable paddleSkin;
 
     // A ball
     Ball ball;
@@ -106,6 +109,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         myPrefs = context.getSharedPreferences("PREFS",Context.MODE_PRIVATE);
         this.context = context;
+        peditor = myPrefs.edit();
+
+
 
         // Initialize ourHolder and paint objects
         ourHolder = getHolder();
@@ -117,6 +123,12 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         // Initialize the player's paddle
         paddle = new Paddle(screenX, screenY);
+        int paddleIndex = myPrefs.getInt("currPaddleIndex",0);
+        Set<String> paddleSet = myPrefs.getStringSet("paddleSkinSet",null);
+        String[] myPaddles = paddleSet.toArray(new String[paddleSet.size()]);
+        String paddleName = "paddle_"+ myPaddles[paddleIndex];
+        Resources res = getResources();
+        paddleSkin = res.getDrawable(getResources().getIdentifier(paddleName, "drawable", "com.example.voicebreakah"));
         ball = new Ball();
         numBricks = 0;
         bricksLeft = 0;
@@ -327,7 +339,8 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             // Choose the brush color for drawing
             paint.setColor(Color.argb(255,  242, 12, 12));
             Resources res = getResources();
-            Drawable d = res.getDrawable(R.drawable.paddle_pink);
+            //Drawable d = res.getDrawable(R.drawable.paddle_pink);
+            Drawable d = paddleSkin;
 
             //drawable.setBounds(myRect);
             //drawable.draw(canvas);

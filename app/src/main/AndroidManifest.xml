@@ -10,8 +10,9 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Settings"></activity>
-        <activity android:name=".Skins"></activity>
+        <activity android:name=".openNewSkin" />
+        <activity android:name=".Settings" />
+        <activity android:name=".Skins" />
         <activity android:name=".GameActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
