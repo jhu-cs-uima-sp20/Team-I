@@ -127,8 +127,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         this.context = context;
         peditor = myPrefs.edit();
 
-        targetLocation=screenX/2;
-        voiceScaleFactor=screenX/100.0;
+
 
 
         // Initialize ourHolder and paint objects
@@ -139,6 +138,8 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         screenX = x;
         screenY = y;
 
+        targetLocation=screenX/2;
+        voiceScaleFactor=screenX/100.0;
         // Initialize the player's paddle
         paddle = new Paddle(screenX, screenY);
 
@@ -232,37 +233,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     @Override
     public void run() {
         while (playing) {
-            //handle voice controls
 
-            if(targetLocation>paddle.getRect().centerX()){
-                paddle.setMovementState(paddle.RIGHT);
-            }
-            else if(targetLocation<paddle.getRect().centerX()){
-                paddle.setMovementState(paddle.LEFT);
-            }
-            else
-                paddle.setMovementState(paddle.STOPPED);
-
-            if(recording==true && toTransform.length!=0 && toTransform!=null) {
-                int bufferReadResult = audioRecord.read(buffer, 0, blockSize);
-                for (int i = 0; i < blockSize && i < bufferReadResult; i++) {
-                    toTransform[i] = (double) buffer[i] / 32768.0; // signed
-                    // 16
-                }
-                //Log.d("array", "array: " + Arrays.toString(toTransform));
-                transformer.ft(toTransform);
-
-                double max=0;
-                double maxIndex=0;
-                for (int i = 1; i < blockSize; i++){
-                    if(toTransform[i]>max){
-                        maxIndex=i;
-                        max=toTransform[i];
-                    }
-                }
-                targetLocation=maxIndex*voiceScaleFactor;
-                Log.d("max", ""+targetLocation);
-            }
 
             // Capture the current time in milliseconds in startFrameTime
             long startFrameTime = System.currentTimeMillis();
@@ -280,7 +251,6 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             if (timeThisFrame >= 1) {
                 fps = 1000 / timeThisFrame;
             }
-
         }
     }
 
@@ -288,7 +258,39 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     /** update method to call in-game */
     private void update(){
 
+        //handle voice controls
 
+        if(targetLocation>paddle.getRect().centerX()){
+            speed += 10;
+            paddle.setMovementState(paddle.RIGHT);
+        }
+        else if(targetLocation<paddle.getRect().centerX()){
+            speed += 10;
+            paddle.setMovementState(paddle.LEFT);
+        }
+        else
+            paddle.setMovementState(paddle.STOPPED);
+
+        if(recording==true) {
+            int bufferReadResult = audioRecord.read(buffer, 0, blockSize);
+            for (int i = 0; i < blockSize && i < bufferReadResult; i++) {
+                toTransform[i] = (double) buffer[i] / 32768.0; // signed
+                // 16
+            }
+            //Log.d("array", "array: " + Arrays.toString(toTransform));
+            transformer.ft(toTransform);
+
+            double max=0;
+            double maxIndex=0;
+            for (int i = 1; i < blockSize; i++){
+                if(toTransform[i]>max){
+                    maxIndex=i;
+                    max=toTransform[i];
+                }
+            }
+            targetLocation=maxIndex*voiceScaleFactor;
+            //Log.d("max", paddle.getRect().centerX()+ " "+targetLocation);
+        }
 
         // Move the paddle if required
         paddle.update(fps, speed);
@@ -297,7 +299,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         ball.update(fps);
 
         if (touching) {
-            speed += 15;
+            speed += 50;
         }
 
         // Check for ball colliding with a brick
