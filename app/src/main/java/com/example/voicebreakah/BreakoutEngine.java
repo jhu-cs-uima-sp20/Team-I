@@ -3,6 +3,7 @@ package com.example.voicebreakah;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -14,15 +15,19 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
+import android.media.AudioFormat;
 import android.media.AudioManager;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
 import android.media.SoundPool;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
+import ca.uol.aig.fftpack.RealDoubleFFT;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Set;
 
 class BreakoutEngine extends SurfaceView implements Runnable{
@@ -86,7 +91,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     boolean newGame;
     boolean gameOver;
-
+    boolean recording=false;
     // Lives
     int lives = 3;
     int level = 1;
@@ -99,8 +104,19 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     // player touching screen
     boolean touching = false;
 
+    private RealDoubleFFT transformer;
+    int frequency = 8000;
+    int channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_MONO;
+    int audioEncoding = AudioFormat.ENCODING_PCM_16BIT;
 
-
+    int bufferSize = AudioRecord.getMinBufferSize(frequency,
+            channelConfiguration, audioEncoding);
+    int blockSize = 256;
+    AudioRecord audioRecord;
+    short[] buffer;
+    double[] toTransform;
+    double targetLocation;
+    double voiceScaleFactor;
     /** The constructor is called when the object is first created */
     public BreakoutEngine(Context context, int x, int y) {
         // This calls the default constructor to setup the rest of the object
@@ -111,6 +127,8 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         this.context = context;
         peditor = myPrefs.edit();
 
+        targetLocation=screenX/2;
+        voiceScaleFactor=screenX/100.0;
 
 
         // Initialize ourHolder and paint objects
@@ -123,6 +141,12 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         // Initialize the player's paddle
         paddle = new Paddle(screenX, screenY);
+
+        recording=false;
+
+
+
+
         int paddleIndex = myPrefs.getInt("currPaddleIndex",0);
         Set<String> paddleSet = myPrefs.getStringSet("paddleSkinSet",null);
         String[] myPaddles = paddleSet.toArray(new String[paddleSet.size()]);
@@ -169,9 +193,21 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             Log.e("error", "failed to load sound files");
         }*/
 
+
         restart();
     }
 
+    public void initializeAudio(){
+        Log.d("init", "initialized");
+        audioRecord = new AudioRecord(
+                MediaRecorder.AudioSource.MIC, frequency,
+                channelConfiguration, audioEncoding, bufferSize);
+        buffer = new short[blockSize];
+        transformer=new RealDoubleFFT(blockSize);
+        toTransform = new double[blockSize];
+        audioRecord.startRecording();
+        recording=true;
+    }
 
     /** Runs when the OS calls onPause on BreakoutActivity method */
     public void pause() {
@@ -196,10 +232,42 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     @Override
     public void run() {
         while (playing) {
+            //handle voice controls
+
+            if(targetLocation>paddle.getRect().centerX()){
+                paddle.setMovementState(paddle.RIGHT);
+            }
+            else if(targetLocation<paddle.getRect().centerX()){
+                paddle.setMovementState(paddle.LEFT);
+            }
+            else
+                paddle.setMovementState(paddle.STOPPED);
+
+            if(recording==true && toTransform.length!=0 && toTransform!=null) {
+                int bufferReadResult = audioRecord.read(buffer, 0, blockSize);
+                for (int i = 0; i < blockSize && i < bufferReadResult; i++) {
+                    toTransform[i] = (double) buffer[i] / 32768.0; // signed
+                    // 16
+                }
+                //Log.d("array", "array: " + Arrays.toString(toTransform));
+                transformer.ft(toTransform);
+
+                double max=0;
+                double maxIndex=0;
+                for (int i = 1; i < blockSize; i++){
+                    if(toTransform[i]>max){
+                        maxIndex=i;
+                        max=toTransform[i];
+                    }
+                }
+                targetLocation=maxIndex*voiceScaleFactor;
+                Log.d("max", ""+targetLocation);
+            }
+
             // Capture the current time in milliseconds in startFrameTime
             long startFrameTime = System.currentTimeMillis();
 
-            // Update the frame
+            // Update the frame+
             if(!paused){
                 update();
             }
@@ -219,6 +287,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     /** update method to call in-game */
     private void update(){
+
+
+
         // Move the paddle if required
         paddle.update(fps, speed);
 
