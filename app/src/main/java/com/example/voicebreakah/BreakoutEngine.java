@@ -119,6 +119,16 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     double[] toTransform;
     double targetLocation;
     double voiceScaleFactor;
+
+
+    private Rect homeR;
+    private Rect playAgainR;
+
+
+
+
+
+
     /** The constructor is called when the object is first created */
     public BreakoutEngine(Context context, int x, int y) {
         // This calls the default constructor to setup the rest of the object
@@ -457,24 +467,33 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
                 Bitmap gameover = BitmapFactory.decodeResource(context.getResources(),
                         R.drawable.game_over_title);
+                Bitmap yourScore = BitmapFactory.decodeResource(context.getResources(),
+                        R.drawable.game_over_your_score);
                 Bitmap home = BitmapFactory.decodeResource(context.getResources(),
                         R.drawable.game_over_home);
                 Bitmap playAgain = BitmapFactory.decodeResource(context.getResources(),
                         R.drawable.game_over_play_again);
-                Bitmap yourScore = BitmapFactory.decodeResource(context.getResources(),
-                        R.drawable.game_over_your_score);
 
-                Bitmap gameover2 = scaleDown(gameover, (float) w - 80, true);
-                canvas.drawBitmap(gameover2, x + 40, y + 40, paint);
-                Bitmap home2 = scaleDown(home, (float) w / 5, true);
-                canvas.drawBitmap(home2, screenX / 2 - home2.getWidth() / 2,
-                        (float) (screenY / 2 + h * 0.2), paint);
-                Bitmap playAgain2 = scaleDown(playAgain, (float) w / 2, true);
-                canvas.drawBitmap(playAgain2, screenX / 2 - playAgain2.getWidth() / 2,
-                        (float) (screenY / 2 + h * 0.05), paint);
-                Bitmap yourScore2 = scaleDown(yourScore, (float) (w / 1.8), true);
-                canvas.drawBitmap(yourScore2, screenX / 2 - yourScore2.getWidth() / 2,
+
+                gameover = scaleDown(gameover, (float) w - 80, true);
+                canvas.drawBitmap(gameover, x + 40, y + 40, paint);
+                yourScore = scaleDown(yourScore, (float) (w / 1.8), true);
+                canvas.drawBitmap(yourScore, screenX / 2 - yourScore.getWidth() / 2,
                         (float) (screenY / 2 - h * 0.3), paint);
+
+
+                home = scaleDown(home, (float) w / 5, true);
+                float a = screenX / 2 - home.getWidth() / 2;
+                float b = (float) (screenY / 2 + h * 0.2);
+                canvas.drawBitmap(home, a, b, paint);
+                homeR = new Rect((int) a, (int) b, (int) (a + home.getWidth()), (int) (b + home.getHeight()));
+
+                playAgain = scaleDown(playAgain, (float) w / 2, true);
+                a = screenX / 2 - playAgain.getWidth() / 2;
+                b = (float) (screenY / 2 + h * 0.05);
+                canvas.drawBitmap(playAgain, a, b, paint);
+                playAgainR = new Rect((int) a, (int) b, (int) (a + playAgain.getWidth()), (int) (b + playAgain.getHeight()));
+
 
                 paint.setColor(Color.argb(255, 255, 192, 29));
                 paint.setTextSize(60);
@@ -502,6 +521,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         return newBitmap;
     }
 
+
+
+
     /** The SurfaceView class implements onTouchListener, so we can override this method and
      * detect screen touches
      * @param motionEvent some motion
@@ -510,6 +532,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         // Our code here
+        float x = motionEvent.getX();
+        float y = motionEvent.getY();
+
         switch (motionEvent.getActionMasked()) {
             // Player has touched the screen
             case MotionEvent.ACTION_DOWN:
@@ -533,8 +558,13 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         // if game over, return to main screen
         if (gameOver) {
             if (MotionEvent.ACTION_DOWN == 0) {
-                //newGame();
-                context.startActivity(new Intent(context,MainActivity.class));
+                if (x >= homeR.left && x < homeR.right && y >= homeR.top && y < homeR.bottom) {
+                    //tada, if this is true, you've started your click inside your bitmap
+                    context.startActivity(new Intent(context, MainActivity.class));
+                } else if (x >= playAgainR.left && x < playAgainR.right
+                        && y >= playAgainR.top && y < playAgainR.bottom) {
+                    newGame();
+                }
             }
         }
 
