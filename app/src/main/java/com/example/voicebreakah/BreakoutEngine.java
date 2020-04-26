@@ -394,7 +394,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         numBricks = 0;
         for(int column = 0; column < 3; column ++ ){
             for(int row = 0; row < 1; row ++ ){
-                bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight);
+                bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight, screenX / 12 + screenX / 24);
                 numBricks++;
                 bricksLeft++;
             }
@@ -445,15 +445,22 @@ class BreakoutEngine extends SurfaceView implements Runnable{
                 }
             }
 
-            // Draw the HUD
-            // Choose the brush color for drawing
+            // Pause button
+            Bitmap pauseBtn = BitmapFactory.decodeResource(context.getResources(), R.drawable.pause_button);
+            float size = (float) screenX / 12;
+            pauseBtn = scaleDown(pauseBtn, size, true);
+            canvas.drawBitmap(pauseBtn, size / 4, size / 4, paint);
+
+
+            // Score
             paint.setColor(Color.argb(255,  0, 0, 0));
-
-            // Draw the score
+            paint.setTextAlign(Paint.Align.RIGHT);
             paint.setTextSize(40);
-            canvas.drawText("Score: " + score, 10,80, paint);
-            //canvas.drawText("Score: " + score + "   Lives: " + lives, 10, 80, paint);
+            canvas.drawText(Integer.toString(score), screenX - size / 4,size / 4 + 40, paint);
+            paint.setTextAlign(Paint.Align.LEFT);
 
+
+            // Game over screen
             if (gameOver) {
                 Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),
                         R.drawable.game_over_background);
