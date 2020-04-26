@@ -125,7 +125,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     private Rect playAgainR;
     private Rect pauseBtnR;
 
-
+    int bufferTop = 0;
 
 
 
@@ -147,6 +147,12 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         // Initialize screenX and screenY because x and y are local
         screenX = x;
         screenY = y;
+
+        // buffer from top of the screen
+        // this is if we want a space between top of the screen and the first row of bricks,
+        // leaving space for the pause button and score, or we can just have them overlap
+        bufferTop = screenX / 12 + screenX / 24;
+
 
         targetLocation=screenX/2;
         voiceScaleFactor=screenX/100.0;
@@ -349,7 +355,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         } else if (ball.getRect().top < 0){
             ball.reverseYVelocity();
-            ball.clearObstacleY(12);
+            ball.clearObstacleY(bufferTop);
             //soundPool.play(beep2ID, 1, 1, 0, 0, 1);
 
         } else if(ball.getRect().left < 0){
@@ -395,7 +401,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         numBricks = 0;
         for(int column = 0; column < 3; column ++ ){
             for(int row = 0; row < 1; row ++ ){
-                bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight, screenX / 12 + screenX / 24);
+                bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight, 0);
                 numBricks++;
                 bricksLeft++;
             }
