@@ -260,12 +260,12 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         //handle voice controls
 
-        if(targetLocation>paddle.getRect().centerX()){
-            speed += 10;
+        if(targetLocation>500){
+            speed += 5;
             paddle.setMovementState(paddle.RIGHT);
         }
-        else if(targetLocation<paddle.getRect().centerX()){
-            speed += 10;
+        else if(targetLocation<500){
+            speed += 5;
             paddle.setMovementState(paddle.LEFT);
         }
         else
@@ -289,7 +289,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
                 }
             }
             targetLocation=maxIndex*voiceScaleFactor;
-            //Log.d("max", paddle.getRect().centerX()+ " "+targetLocation);
+            Log.d("max", paddle.getRect().centerX()+ " "+targetLocation);
         }
 
         // Move the paddle if required
