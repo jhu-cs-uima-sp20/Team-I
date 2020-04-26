@@ -123,6 +123,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     private Rect homeR;
     private Rect playAgainR;
+    private Rect pauseBtnR;
 
 
 
@@ -450,6 +451,8 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             float size = (float) screenX / 12;
             pauseBtn = scaleDown(pauseBtn, size, true);
             canvas.drawBitmap(pauseBtn, size / 4, size / 4, paint);
+            pauseBtnR = new Rect((int) size / 4, (int) size / 4,
+                    (int) (size / 4 + pauseBtn.getWidth()), (int) (size / 4 + pauseBtn.getHeight()));
 
 
             // Score
@@ -545,6 +548,13 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         switch (motionEvent.getActionMasked()) {
             // Player has touched the screen
             case MotionEvent.ACTION_DOWN:
+
+                if (x >= pauseBtnR.left && x < pauseBtnR.right && y >= pauseBtnR.top
+                        && y < pauseBtnR.bottom) {
+                    //tada, if this is true, you've started your click inside your bitmap
+                    //context.startActivity(new Intent(context, MainActivity.class));
+                }
+
                 paused = false;
                 touching = true;
                 if (motionEvent.getX() > screenX / (float) 2) {
