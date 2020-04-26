@@ -29,6 +29,8 @@ import ca.uol.aig.fftpack.RealDoubleFFT;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 class BreakoutEngine extends SurfaceView implements Runnable{
 
@@ -117,6 +119,16 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     double[] toTransform;
     double targetLocation;
     double voiceScaleFactor;
+
+
+    private Rect homeR;
+    private Rect playAgainR;
+
+
+
+
+
+
     /** The constructor is called when the object is first created */
     public BreakoutEngine(Context context, int x, int y) {
         // This calls the default constructor to setup the rest of the object
@@ -126,9 +138,6 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         myPrefs = context.getSharedPreferences("PREFS",Context.MODE_PRIVATE);
         this.context = context;
         peditor = myPrefs.edit();
-
-
-
 
         // Initialize ourHolder and paint objects
         ourHolder = getHolder();
@@ -233,8 +242,6 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     @Override
     public void run() {
         while (playing) {
-
-
             // Capture the current time in milliseconds in startFrameTime
             long startFrameTime = System.currentTimeMillis();
 
@@ -242,9 +249,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             if(!paused){
                 update();
             }
-
-            // Draw the frame
-            draw();
+            draw();  // Draw the frame
 
             // Calculate the fps this frame; can then use the result to time animations and more.
             timeThisFrame = System.currentTimeMillis() - startFrameTime;
@@ -259,7 +264,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     private void update(){
 
         //handle voice controls
-
+        /*
         if(targetLocation>paddle.getRect().centerX()){
             speed += 10;
             paddle.setMovementState(paddle.RIGHT);
@@ -290,7 +295,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             }
             targetLocation=maxIndex*voiceScaleFactor;
             //Log.d("max", paddle.getRect().centerX()+ " "+targetLocation);
-        }
+        }*/
 
         // Move the paddle if required
         paddle.update(fps, speed);
@@ -450,15 +455,51 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             //canvas.drawText("Score: " + score + "   Lives: " + lives, 10, 80, paint);
 
             if (gameOver) {
-                Rect go = new Rect(200, 200, screenX - 200, screenY - 400);
-                paint.setColor(Color.argb(255, 255, 255, 255));
-                canvas.drawRect(go, paint);
+                Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),
+                        R.drawable.game_over_background);
+                Bitmap bitmap2 = scaleDown(bitmap, (float) screenX - 150, true);
+                double h = bitmap2.getHeight();
+                double w = bitmap2.getWidth();
+                int x = screenX / 2 - (int) w / 2;
+                int y = screenY / 2 - (int) (h * 0.6);
+                paint = new Paint();
+                canvas.drawBitmap(bitmap2, x, y, paint);
 
-                paint.setColor(Color.argb(255, 0, 0, 0));
-                paint.setTextSize(50);
+                Bitmap gameover = BitmapFactory.decodeResource(context.getResources(),
+                        R.drawable.game_over_title);
+                Bitmap yourScore = BitmapFactory.decodeResource(context.getResources(),
+                        R.drawable.game_over_your_score);
+                Bitmap home = BitmapFactory.decodeResource(context.getResources(),
+                        R.drawable.game_over_home);
+                Bitmap playAgain = BitmapFactory.decodeResource(context.getResources(),
+                        R.drawable.game_over_play_again);
+
+
+                gameover = scaleDown(gameover, (float) w - 80, true);
+                canvas.drawBitmap(gameover, x + 40, y + 40, paint);
+                yourScore = scaleDown(yourScore, (float) (w / 1.8), true);
+                canvas.drawBitmap(yourScore, screenX / 2 - yourScore.getWidth() / 2,
+                        (float) (screenY / 2 - h * 0.3), paint);
+
+
+                home = scaleDown(home, (float) w / 5, true);
+                float a = screenX / 2 - home.getWidth() / 2;
+                float b = (float) (screenY / 2 + h * 0.2);
+                canvas.drawBitmap(home, a, b, paint);
+                homeR = new Rect((int) a, (int) b, (int) (a + home.getWidth()), (int) (b + home.getHeight()));
+
+                playAgain = scaleDown(playAgain, (float) w / 2, true);
+                a = screenX / 2 - playAgain.getWidth() / 2;
+                b = (float) (screenY / 2 + h * 0.05);
+                canvas.drawBitmap(playAgain, a, b, paint);
+                playAgainR = new Rect((int) a, (int) b, (int) (a + playAgain.getWidth()), (int) (b + playAgain.getHeight()));
+
+
+                paint.setColor(Color.argb(255, 255, 192, 29));
+                paint.setTextSize(60);
                 paint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText("Your score: " + score, screenX / 2,
-                        screenY / 2 - 100, paint);
+                canvas.drawText(Integer.toString(score), screenX / 2,
+                        (float) (screenY / 2 - h * 0.08), paint);
                 paint.setTextAlign(Paint.Align.LEFT);
             }
 
@@ -466,6 +507,22 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             ourHolder.unlockCanvasAndPost(canvas);
         }
     }
+
+    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
+                                   boolean filter) {
+        float ratio = Math.min(
+                (float) maxImageSize / realImage.getWidth(),
+                (float) maxImageSize / realImage.getHeight());
+        int width = Math.round((float) ratio * realImage.getWidth());
+        int height = Math.round((float) ratio * realImage.getHeight());
+
+        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
+                height, filter);
+        return newBitmap;
+    }
+
+
+
 
     /** The SurfaceView class implements onTouchListener, so we can override this method and
      * detect screen touches
@@ -475,6 +532,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         // Our code here
+        float x = motionEvent.getX();
+        float y = motionEvent.getY();
+
         switch (motionEvent.getActionMasked()) {
             // Player has touched the screen
             case MotionEvent.ACTION_DOWN:
@@ -498,8 +558,13 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         // if game over, return to main screen
         if (gameOver) {
             if (MotionEvent.ACTION_DOWN == 0) {
-                //newGame();
-                context.startActivity(new Intent(context,MainActivity.class));
+                if (x >= homeR.left && x < homeR.right && y >= homeR.top && y < homeR.bottom) {
+                    //tada, if this is true, you've started your click inside your bitmap
+                    context.startActivity(new Intent(context, MainActivity.class));
+                } else if (x >= playAgainR.left && x < playAgainR.right
+                        && y >= playAgainR.top && y < playAgainR.bottom) {
+                    newGame();
+                }
             }
         }
 
