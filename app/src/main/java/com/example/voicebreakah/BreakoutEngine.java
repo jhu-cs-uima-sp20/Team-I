@@ -539,7 +539,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     private void drawGameOver() {
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.game_over_background);
-        Bitmap bitmap2 = scaleDown(bitmap, (float) screenX - 150, true);
+        Bitmap bitmap2 = scaleDown(bitmap, (float) screenX - 300, true);
         double h = bitmap2.getHeight();
         double w = bitmap2.getWidth();
         int x = screenX / 2 - (int) w / 2;
@@ -557,7 +557,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
                 R.drawable.game_over_play_again);
 
 
-        gameover = scaleDown(gameover, (float) w - 80, true);
+        gameover = scaleDown(gameover, (float) w - 100, true);
         canvas.drawBitmap(gameover, x + 40, y + 40, paint);
         yourScore = scaleDown(yourScore, (float) (w / 1.8), true);
         canvas.drawBitmap(yourScore, screenX / 2 - yourScore.getWidth() / 2,
@@ -578,7 +578,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
 
         paint.setColor(Color.argb(255, 255, 192, 29));
-        paint.setTextSize(60);
+        paint.setTextSize(50);
         paint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText(Integer.toString(score), screenX / 2,
                 (float) (screenY / 2 - h * 0.08), paint);
@@ -617,33 +617,39 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         switch (motionEvent.getActionMasked()) {
             // Player has touched the screen
             case MotionEvent.ACTION_DOWN:
-                if (x >= pauseBtnR.left && x < pauseBtnR.right && y >= pauseBtnR.top
-                        && y < pauseBtnR.bottom) {
-                    //context.startActivity(new Intent(context, PauseActivity.class));
-                    paused = true;
-                    pauseMenu = true;
-                } else if (pauseMenu) {
-                    if (x >= resumeR.left && x < resumeR.right && y >= resumeR.top
-                            && y < resumeR.bottom) {
-                        pauseMenu = false;
-                        paused = false;
-                    } else if (x >= homeR.left && x < homeR.right && y >= homeR.top
-                            && y < homeR.bottom) {
-                        context.startActivity(new Intent(context, MainActivity.class));
-                    } else if (x >=  newGameR.left && x < newGameR.right && y >= newGameR.top
-                            && y < newGameR.bottom) {
-                        pauseMenu = false;
-                        newGame();
+                // if game over, return to main screen
+                if (gameOver) {
+                    if (MotionEvent.ACTION_DOWN == 0) {
+                        if (tap(x, y, homeR)) {
+                            context.startActivity(new Intent(context, MainActivity.class));
+                        } else if (tap(x, y, playAgainR)) {
+                            newGame();
+                        }
                     }
                 } else {
-                    paused = false;
-                    touching = true;
-                    if (motionEvent.getX() > screenX / (float) 2) {
-                        paddle.setMovementState(paddle.RIGHT);
+                    if (tap(x, y, pauseBtnR)) {
+                        paused = true;
+                        pauseMenu = true;
+                    } else if (pauseMenu) {
+                        if (tap(x, y, resumeR)) {
+                            pauseMenu = false;
+                            paused = false;
+                        } else if (tap(x, y, homeR)) {
+                            context.startActivity(new Intent(context, MainActivity.class));
+                        } else if (tap(x, y, newGameR)) {
+                            pauseMenu = false;
+                            newGame();
+                        }
                     } else {
-                        paddle.setMovementState(paddle.LEFT);
+                        paused = false;
+                        touching = true;
+                        if (motionEvent.getX() > screenX / (float) 2) {
+                            paddle.setMovementState(paddle.RIGHT);
+                        } else {
+                            paddle.setMovementState(paddle.LEFT);
+                        }
+                        break;
                     }
-                    break;
                 }
 
             // Player has removed finger from screen
@@ -654,19 +660,14 @@ class BreakoutEngine extends SurfaceView implements Runnable{
                 break;
         }
 
-        // if game over, return to main screen
-        if (gameOver) {
-            if (MotionEvent.ACTION_DOWN == 0) {
-                if (x >= homeR.left && x < homeR.right && y >= homeR.top && y < homeR.bottom) {
-                    //tada, if this is true, you've started your click inside your bitmap
-                    context.startActivity(new Intent(context, MainActivity.class));
-                } else if (x >= playAgainR.left && x < playAgainR.right
-                        && y >= playAgainR.top && y < playAgainR.bottom) {
-                    newGame();
-                }
-            }
-        }
-
         return true;
+    }
+
+
+    /** helper method to see if something is tapped */
+    private boolean tap(float x, float y, Rect r) {
+        if (x >= r.left && x < r.right && y >= r.top && y < r.bottom)
+            return true;
+        return false;
     }
 }
