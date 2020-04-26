@@ -508,6 +508,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         }
     }
 
+    /** Helper function to resize bitmaps */
     public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
                                    boolean filter) {
         float ratio = Math.min(
