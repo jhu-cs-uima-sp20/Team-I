@@ -134,6 +134,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     // Optional buffer
     int bufferTop = 0;
 
+    // Sound on/off
+    boolean soundOn;
+
 
     /** The constructor is called when the object is first created
      */
@@ -214,6 +217,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             Log.e("error", "failed to load sound files");
         }
 
+        soundOn = myPrefs.getBoolean("SOUND_ON_OFF", true);
         restart();
     }
 
@@ -327,7 +331,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
                     ball.reverseYVelocity();
                     score = score + 10;
                     bricksLeft--;
-                    soundPool.play(explodeID, 1, 1, 0, 0, 1);
+                    if (soundOn) {
+                        soundPool.play(explodeID, 1, 1, 0, 0, 1);
+                    }
                 }
             }
         }
@@ -338,7 +344,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             ball.setXVelocity(ball.getXVelocity());
             ball.reverseYVelocity();
             ball.clearObstacleY(paddle.getRect().top - 10);
-            soundPool.play(beep1ID, 1, 1, 0, 0, 1);
+            if (soundOn) {
+                soundPool.play(beep1ID, 1, 1, 0, 0, 1);
+            }
         }
 
 
@@ -347,7 +355,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             ball.clearObstacleY(screenY - 2);
             paused = true;
             gameOver = true;
-            soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
+            if (soundOn) {
+                soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
+            }
 
             // update highscore and coins
             SharedPreferences.Editor peditor = myPrefs.edit();
@@ -364,17 +374,23 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         } else if (ball.getRect().top < 0){
             ball.reverseYVelocity();
             ball.clearObstacleY(bufferTop);
-            soundPool.play(beep2ID, 1, 1, 0, 0, 1);
+            if (soundOn) {
+                soundPool.play(beep2ID, 1, 1, 0, 0, 1);
+            }
 
         } else if(ball.getRect().left < 0){
             ball.reverseXVelocity();
             ball.clearObstacleX(2);
-            soundPool.play(beep3ID, 1, 1, 0, 0, 1);
+            if (soundOn) {
+                soundPool.play(beep3ID, 1, 1, 0, 0, 1);
+            }
 
         } else if(ball.getRect().right > screenX){
             ball.reverseXVelocity();
             ball.clearObstacleX(screenX - 42);
-            soundPool.play(beep3ID, 1, 1, 0, 0, 1);
+            if (soundOn) {
+                soundPool.play(beep3ID, 1, 1, 0, 0, 1);
+            }
         }
 
         // Pause if cleared screen
