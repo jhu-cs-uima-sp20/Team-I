@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView paddleView;
     private int coins;
 
+    Intent music;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        // paddles
         peditor = myPrefs.edit();
         newUser = myPrefs.getBoolean("newUser",true);
         if(newUser){
@@ -87,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         }
         peditor.commit();
 
-
         // changing paddle
         res = getResources();
         paddleView = findViewById(R.id.paddleView);
@@ -97,7 +98,34 @@ public class MainActivity extends AppCompatActivity {
         rightButton.setOnClickListener(rightButtonListener);
         leftButton.setOnClickListener(leftButtonListener);
 
+
+        // background music
+        music = new Intent();
+        music.setClass(this, BackgroundSoundService.class);
+        startService(music);
     }
+
+    /*
+    @Override
+    protected void onPause() {
+        stopService(music);
+        super.onPause();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startService(music);
+    }
+    */
+
+    @Override
+    protected  void onDestroy() {
+        stopService(music);
+        super.onDestroy();
+    }
+
 
     @Override
     protected void onStart() {
@@ -109,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextView coinText = (TextView) findViewById(R.id.coinBalance_val);
         int coinBalance = myPrefs.getInt("coinBalance", 0);
-        coinText.setText(Integer.toString(coinBalance));
+        //coinText.setText(Integer.toString(coinBalance));
 
 
         Set<String> paddleIDSet = myPrefs.getStringSet("paddleSkinSet",null);
@@ -119,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
         Drawable d = res.getDrawable(getResources().getIdentifier("paddle_"+paddleIDs[paddleIndex], "drawable", "com.example.voicebreakah"));
         paddleView.setImageDrawable(d);
     }
+
 
     private View.OnClickListener rightButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -134,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    
     private View.OnClickListener leftButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
             paddleIndex++;
