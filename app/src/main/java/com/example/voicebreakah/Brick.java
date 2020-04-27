@@ -9,13 +9,13 @@ public class Brick {
 
     private boolean isVisible;
 
-    Brick(int row, int column, int width, int height){
+    Brick(int row, int column, int width, int height, int skip){
         isVisible = true;
         int padding = 1;
         rect = new Rect((int)(column * width + padding), //* TR get rid of casts and change to RectF
-                (int)(row * height + padding),
+                (int)(row * height + padding + skip),
                 (int)(column * width + width - padding),
-                (int)(row * height + height - padding));
+                (int)(row * height + height - padding + skip));
     }
 
     Rect getRect(){

@@ -93,6 +93,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     boolean newGame;
     boolean gameOver;
+    boolean pauseMenu;
+
+
     boolean recording=false;
     // Lives
     int lives = 3;
@@ -123,8 +126,11 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     private Rect homeR;
     private Rect playAgainR;
+    private Rect pauseBtnR;
+    private Rect resumeR;
+    private Rect newGameR;
 
-
+    int bufferTop = 0;
 
 
 
@@ -146,6 +152,12 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         // Initialize screenX and screenY because x and y are local
         screenX = x;
         screenY = y;
+
+        // buffer from top of the screen
+        // this is if we want a space between top of the screen and the first row of bricks,
+        // leaving space for the pause button and score, or we can just have them overlap
+        bufferTop = screenX / 12 + screenX / 24;
+
 
         targetLocation=screenX/2;
         voiceScaleFactor=screenX/100.0;
@@ -348,7 +360,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         } else if (ball.getRect().top < 0){
             ball.reverseYVelocity();
-            ball.clearObstacleY(12);
+            ball.clearObstacleY(bufferTop);
             //soundPool.play(beep2ID, 1, 1, 0, 0, 1);
 
         } else if(ball.getRect().left < 0){
@@ -394,7 +406,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         numBricks = 0;
         for(int column = 0; column < 3; column ++ ){
             for(int row = 0; row < 1; row ++ ){
-                bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight);
+                bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight, 0);
                 numBricks++;
                 bricksLeft++;
             }
@@ -445,62 +457,29 @@ class BreakoutEngine extends SurfaceView implements Runnable{
                 }
             }
 
-            // Draw the HUD
-            // Choose the brush color for drawing
+            // Pause button
+            Bitmap pauseBtn = BitmapFactory.decodeResource(context.getResources(), R.drawable.pause_button);
+            float size = (float) screenX / 12;
+            pauseBtn = scaleDown(pauseBtn, size, true);
+            canvas.drawBitmap(pauseBtn, size / 4, size / 4, paint);
+            pauseBtnR = new Rect((int) size / 4, (int) size / 4,
+                    (int) (size / 4 + pauseBtn.getWidth()), (int) (size / 4 + pauseBtn.getHeight()));
+
+
+            // Score
             paint.setColor(Color.argb(255,  0, 0, 0));
-
-            // Draw the score
+            paint.setTextAlign(Paint.Align.RIGHT);
             paint.setTextSize(40);
-            canvas.drawText("Score: " + score, 10,80, paint);
-            //canvas.drawText("Score: " + score + "   Lives: " + lives, 10, 80, paint);
+            canvas.drawText(Integer.toString(score), screenX - size / 4,size / 4 + 40, paint);
+            paint.setTextAlign(Paint.Align.LEFT);
 
+
+            // Game over screen
             if (gameOver) {
-                Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),
-                        R.drawable.game_over_background);
-                Bitmap bitmap2 = scaleDown(bitmap, (float) screenX - 150, true);
-                double h = bitmap2.getHeight();
-                double w = bitmap2.getWidth();
-                int x = screenX / 2 - (int) w / 2;
-                int y = screenY / 2 - (int) (h * 0.6);
-                paint = new Paint();
-                canvas.drawBitmap(bitmap2, x, y, paint);
-
-                Bitmap gameover = BitmapFactory.decodeResource(context.getResources(),
-                        R.drawable.game_over_title);
-                Bitmap yourScore = BitmapFactory.decodeResource(context.getResources(),
-                        R.drawable.game_over_your_score);
-                Bitmap home = BitmapFactory.decodeResource(context.getResources(),
-                        R.drawable.game_over_home);
-                Bitmap playAgain = BitmapFactory.decodeResource(context.getResources(),
-                        R.drawable.game_over_play_again);
-
-
-                gameover = scaleDown(gameover, (float) w - 80, true);
-                canvas.drawBitmap(gameover, x + 40, y + 40, paint);
-                yourScore = scaleDown(yourScore, (float) (w / 1.8), true);
-                canvas.drawBitmap(yourScore, screenX / 2 - yourScore.getWidth() / 2,
-                        (float) (screenY / 2 - h * 0.3), paint);
-
-
-                home = scaleDown(home, (float) w / 5, true);
-                float a = screenX / 2 - home.getWidth() / 2;
-                float b = (float) (screenY / 2 + h * 0.2);
-                canvas.drawBitmap(home, a, b, paint);
-                homeR = new Rect((int) a, (int) b, (int) (a + home.getWidth()), (int) (b + home.getHeight()));
-
-                playAgain = scaleDown(playAgain, (float) w / 2, true);
-                a = screenX / 2 - playAgain.getWidth() / 2;
-                b = (float) (screenY / 2 + h * 0.05);
-                canvas.drawBitmap(playAgain, a, b, paint);
-                playAgainR = new Rect((int) a, (int) b, (int) (a + playAgain.getWidth()), (int) (b + playAgain.getHeight()));
-
-
-                paint.setColor(Color.argb(255, 255, 192, 29));
-                paint.setTextSize(60);
-                paint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText(Integer.toString(score), screenX / 2,
-                        (float) (screenY / 2 - h * 0.08), paint);
-                paint.setTextAlign(Paint.Align.LEFT);
+                drawGameOver();
+            }
+            if (pauseMenu) {
+                drawPauseMenu();
             }
 
             // Show everything we have drawn
@@ -508,7 +487,107 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         }
     }
 
-    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
+
+    /** Draws the pause menu */
+    private void drawPauseMenu() {
+        // draw background
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.pause_menu_background);
+        bitmap = scaleDown(bitmap, (float) screenX - 120, true);
+        double h = bitmap.getHeight();
+        double w = bitmap.getWidth();
+        int x = screenX / 2 - (int) w / 2;
+        int y = screenY / 2 - (int) (h * 0.5);
+        paint = new Paint();
+        canvas.drawBitmap(bitmap, x, y, paint);
+
+
+        Bitmap pauseTitle = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.pause_title);
+        Bitmap resume = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.resume_btn);
+        Bitmap home = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.game_over_home);
+        Bitmap newGame = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.new_game_btn);
+
+
+        pauseTitle = scaleDown(pauseTitle, (float) (w - 250), true);
+        canvas.drawBitmap(pauseTitle, screenX / 2 - pauseTitle.getWidth()/2, y + 60, paint);
+
+        resume = scaleDown(resume, (float) (w / 2.5), true);
+        int a = screenX / 2 - resume.getWidth()/2;
+        int b = (int) (screenY / 2 - y * 0.4);
+        canvas.drawBitmap(resume, a, b, paint);
+        resumeR = new Rect(a, b, a + resume.getWidth(), b + resume.getHeight());
+
+        home = scaleDown(home, (float) w / 4, true);
+        a = screenX / 2 - home.getWidth()/2;
+        b = (int) (screenY / 2 + y * 0.1);
+        canvas.drawBitmap(home, a, b, paint);
+        homeR = new Rect(a, b, a + home.getWidth(), b + home.getHeight());
+
+        newGame = scaleDown(newGame, (float) w / 2, true);
+        a = screenX / 2 - newGame.getWidth()/2;
+        b = (int) (screenY / 2 + y * 0.6);
+        canvas.drawBitmap(newGame, a, b, paint);
+        newGameR = new Rect(a, b, a + newGame.getWidth(), b + newGame.getHeight());
+    }
+
+
+    /** Draws the game over screen and its options */
+    private void drawGameOver() {
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.game_over_background);
+        Bitmap bitmap2 = scaleDown(bitmap, (float) screenX - 300, true);
+        double h = bitmap2.getHeight();
+        double w = bitmap2.getWidth();
+        int x = screenX / 2 - (int) w / 2;
+        int y = screenY / 2 - (int) (h * 0.6);
+        paint = new Paint();
+        canvas.drawBitmap(bitmap2, x, y, paint);
+
+        Bitmap gameover = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.game_over_title);
+        Bitmap yourScore = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.game_over_your_score);
+        Bitmap home = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.game_over_home);
+        Bitmap playAgain = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.game_over_play_again);
+
+
+        gameover = scaleDown(gameover, (float) w - 100, true);
+        canvas.drawBitmap(gameover, x + 40, y + 40, paint);
+        yourScore = scaleDown(yourScore, (float) (w / 1.8), true);
+        canvas.drawBitmap(yourScore, screenX / 2 - yourScore.getWidth() / 2,
+                (float) (screenY / 2 - h * 0.3), paint);
+
+
+        home = scaleDown(home, (float) w / 5, true);
+        float a = screenX / 2 - home.getWidth() / 2;
+        float b = (float) (screenY / 2 + h * 0.2);
+        canvas.drawBitmap(home, a, b, paint);
+        homeR = new Rect((int) a, (int) b, (int) (a + home.getWidth()), (int) (b + home.getHeight()));
+
+        playAgain = scaleDown(playAgain, (float) w / 2, true);
+        a = screenX / 2 - playAgain.getWidth() / 2;
+        b = (float) (screenY / 2 + h * 0.05);
+        canvas.drawBitmap(playAgain, a, b, paint);
+        playAgainR = new Rect((int) a, (int) b, (int) (a + playAgain.getWidth()), (int) (b + playAgain.getHeight()));
+
+
+        paint.setColor(Color.argb(255, 255, 192, 29));
+        paint.setTextSize(50);
+        paint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText(Integer.toString(score), screenX / 2,
+                (float) (screenY / 2 - h * 0.08), paint);
+        paint.setTextAlign(Paint.Align.LEFT);
+    }
+
+
+    /** Helper method to scale bitmaps */
+    private Bitmap scaleDown(Bitmap realImage, float maxImageSize,
                                    boolean filter) {
         float ratio = Math.min(
                 (float) maxImageSize / realImage.getWidth(),
@@ -538,14 +617,40 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         switch (motionEvent.getActionMasked()) {
             // Player has touched the screen
             case MotionEvent.ACTION_DOWN:
-                paused = false;
-                touching = true;
-                if (motionEvent.getX() > screenX / (float) 2) {
-                    paddle.setMovementState(paddle.RIGHT);
+                // if game over, return to main screen
+                if (gameOver) {
+                    if (MotionEvent.ACTION_DOWN == 0) {
+                        if (tap(x, y, homeR)) {
+                            context.startActivity(new Intent(context, MainActivity.class));
+                        } else if (tap(x, y, playAgainR)) {
+                            newGame();
+                        }
+                    }
                 } else {
-                    paddle.setMovementState(paddle.LEFT);
+                    if (tap(x, y, pauseBtnR)) {
+                        paused = true;
+                        pauseMenu = true;
+                    } else if (pauseMenu) {
+                        if (tap(x, y, resumeR)) {
+                            pauseMenu = false;
+                            paused = false;
+                        } else if (tap(x, y, homeR)) {
+                            context.startActivity(new Intent(context, MainActivity.class));
+                        } else if (tap(x, y, newGameR)) {
+                            pauseMenu = false;
+                            newGame();
+                        }
+                    } else {
+                        paused = false;
+                        touching = true;
+                        if (motionEvent.getX() > screenX / (float) 2) {
+                            paddle.setMovementState(paddle.RIGHT);
+                        } else {
+                            paddle.setMovementState(paddle.LEFT);
+                        }
+                        break;
+                    }
                 }
-                break;
 
             // Player has removed finger from screen
             case MotionEvent.ACTION_UP:
@@ -555,19 +660,14 @@ class BreakoutEngine extends SurfaceView implements Runnable{
                 break;
         }
 
-        // if game over, return to main screen
-        if (gameOver) {
-            if (MotionEvent.ACTION_DOWN == 0) {
-                if (x >= homeR.left && x < homeR.right && y >= homeR.top && y < homeR.bottom) {
-                    //tada, if this is true, you've started your click inside your bitmap
-                    context.startActivity(new Intent(context, MainActivity.class));
-                } else if (x >= playAgainR.left && x < playAgainR.right
-                        && y >= playAgainR.top && y < playAgainR.bottom) {
-                    newGame();
-                }
-            }
-        }
-
         return true;
+    }
+
+
+    /** helper method to see if something is tapped */
+    private boolean tap(float x, float y, Rect r) {
+        if (x >= r.left && x < r.right && y >= r.top && y < r.bottom)
+            return true;
+        return false;
     }
 }
