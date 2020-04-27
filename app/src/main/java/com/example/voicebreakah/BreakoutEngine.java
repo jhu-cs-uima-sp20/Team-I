@@ -389,6 +389,8 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     private void newGame() {
         gameOver = false;
         score = 0;
+        level = 0;
+        ball.setSpeedFactor(1);
         restart();
     }
 
@@ -404,16 +406,26 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         // Build a wall of bricks
         numBricks = 0;
-        boolean halfBrick = false;
         int numCols = 3;
-        int numRows = 1;
-        for(int column = 0; column < numCols; column++ ){
-            for(int row = 0; row < numRows; row++ ) {
-                if (row % 2 == 1 && )
-                bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight, 0);
+        int numRows = 3;
+
+        for(int row = 0; row < numRows; row++) {
+            boolean rowBrick = false;
+            if (row % 2 == 1) {
+                rowBrick = true;
+                numCols++;
+            }
+            for(int column = 0; column < numCols; column++) {
+                boolean halfBrick = false;
+                if (column == 0 || column == numCols - 1)
+                    halfBrick = true;
+                bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight,
+                        rowBrick, halfBrick, 0);
                 numBricks++;
                 bricksLeft++;
             }
+            if (rowBrick)
+                numCols--;
         }
     }
 

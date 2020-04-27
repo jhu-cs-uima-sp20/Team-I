@@ -92,7 +92,6 @@ public class Ball {
 
     // Update speed factor based on level
     void setSpeedFactor(float sp){
-        //speedFactor = sp;
         xVelocity = originalVelocityX * sp;
         yVelocity = originalVelocityY * sp;
     }
