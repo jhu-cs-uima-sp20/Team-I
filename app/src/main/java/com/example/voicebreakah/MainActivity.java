@@ -108,17 +108,24 @@ public class MainActivity extends AppCompatActivity {
     /*
     @Override
     protected void onPause() {
-        stopService(music);
+        //startService(music);
         super.onPause();
     }
 
+     */
 
     @Override
     protected void onResume() {
         super.onResume();
-        startService(music);
+        //startService(music);
+
+        if (myPrefs.getBoolean("MUSIC_ON_OFF", true)) {
+            startService(music);
+        } else {
+            stopService(music);
+        }
     }
-    */
+
 
     @Override
     protected  void onDestroy() {
@@ -130,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
 
         TextView highscore = (TextView) findViewById(R.id.tv_highscore_val);
         int score = myPrefs.getInt("highscore", 0);

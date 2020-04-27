@@ -134,6 +134,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     // Optional buffer
     int bufferTop = 0;
 
+    // Sound on/off
+    boolean soundOn;
+
 
     /** The constructor is called when the object is first created
      */
@@ -214,6 +217,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             Log.e("error", "failed to load sound files");
         }
 
+        soundOn = myPrefs.getBoolean("SOUND_ON_OFF", true);
         restart();
     }
 
@@ -276,39 +280,39 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     private void update(){
 
         //handle voice controls
-        /*
-        if(targetLocation>paddle.getRect().centerX()){
-            speed += 10;
-            paddle.setMovementState(paddle.RIGHT);
-        }
-        else if(targetLocation<paddle.getRect().centerX()){
-            speed += 10;
-            paddle.setMovementState(paddle.LEFT);
-        }
-        else
-            paddle.setMovementState(paddle.STOPPED);
 
-        if(recording==true) {
-            int bufferReadResult = audioRecord.read(buffer, 0, blockSize);
-            for (int i = 0; i < blockSize && i < bufferReadResult; i++) {
-                toTransform[i] = (double) buffer[i] / 32768.0; // signed
-                // 16
-            }
-            //Log.d("array", "array: " + Arrays.toString(toTransform));
-            transformer.ft(toTransform);
+        boolean voiceOn = myPrefs.getBoolean("VOICE_ON_OFF", false);
+        if(voiceOn) {
+            if (targetLocation > 500) {
+                speed += 5;
+                paddle.setMovementState(paddle.RIGHT);
+            } else if (targetLocation < 500) {
+                speed += 5;
+                paddle.setMovementState(paddle.LEFT);
+            } else
+                paddle.setMovementState(paddle.STOPPED);
 
-            double max=0;
-            double maxIndex=0;
-            for (int i = 1; i < blockSize; i++){
-                if(toTransform[i]>max){
-                    maxIndex=i;
-                    max=toTransform[i];
+            if (recording == true) {
+                int bufferReadResult = audioRecord.read(buffer, 0, blockSize);
+                for (int i = 0; i < blockSize && i < bufferReadResult; i++) {
+                    toTransform[i] = (double) buffer[i] / 32768.0; // signed
+                    // 16
                 }
-            }
-            targetLocation=maxIndex*voiceScaleFactor;
-            //Log.d("max", paddle.getRect().centerX()+ " "+targetLocation);
-        }*/
+                //Log.d("array", "array: " + Arrays.toString(toTransform));
+                transformer.ft(toTransform);
 
+                double max = 0;
+                double maxIndex = 0;
+                for (int i = 1; i < blockSize; i++) {
+                    if (toTransform[i] > max) {
+                        maxIndex = i;
+                        max = toTransform[i];
+                    }
+                }
+                targetLocation = maxIndex * voiceScaleFactor;
+                Log.d("max", paddle.getRect().centerX() + " " + targetLocation);
+            }
+        }
         // Move the paddle if required
         paddle.update(fps, speed);
 
@@ -327,7 +331,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
                     ball.reverseYVelocity();
                     score = score + 10;
                     bricksLeft--;
-                    soundPool.play(explodeID, 1, 1, 0, 0, 1);
+                    if (soundOn) {
+                        soundPool.play(explodeID, 1, 1, 0, 0, 1);
+                    }
                 }
             }
         }
@@ -338,7 +344,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             ball.setXVelocity(ball.getXVelocity());
             ball.reverseYVelocity();
             ball.clearObstacleY(paddle.getRect().top - 10);
-            soundPool.play(beep1ID, 1, 1, 0, 0, 1);
+            if (soundOn) {
+                soundPool.play(beep1ID, 1, 1, 0, 0, 1);
+            }
         }
 
 
@@ -347,7 +355,9 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             ball.clearObstacleY(screenY - 2);
             paused = true;
             gameOver = true;
-            soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
+            if (soundOn) {
+                soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
+            }
 
             // update highscore and coins
             SharedPreferences.Editor peditor = myPrefs.edit();
@@ -357,23 +367,30 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             }
             int currCoins = myPrefs.getInt("coinBalance",0);
             currCoins += (10*level);
+            Log.d("V","coins: "+currCoins);
             peditor.putInt("coinBalance",currCoins);
             peditor.commit();
 
         } else if (ball.getRect().top < 0){
             ball.reverseYVelocity();
             ball.clearObstacleY(bufferTop);
-            soundPool.play(beep2ID, 1, 1, 0, 0, 1);
+            if (soundOn) {
+                soundPool.play(beep2ID, 1, 1, 0, 0, 1);
+            }
 
         } else if(ball.getRect().left < 0){
             ball.reverseXVelocity();
             ball.clearObstacleX(2);
-            soundPool.play(beep3ID, 1, 1, 0, 0, 1);
+            if (soundOn) {
+                soundPool.play(beep3ID, 1, 1, 0, 0, 1);
+            }
 
         } else if(ball.getRect().right > screenX){
             ball.reverseXVelocity();
             ball.clearObstacleX(screenX - 42);
-            soundPool.play(beep3ID, 1, 1, 0, 0, 1);
+            if (soundOn) {
+                soundPool.play(beep3ID, 1, 1, 0, 0, 1);
+            }
         }
 
         // Pause if cleared screen
@@ -391,7 +408,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     private void newGame() {
         gameOver = false;
         score = 0;
-        level = 0;
+        level = 1;
         ball.setSpeedFactor(1);
         restart();
     }
