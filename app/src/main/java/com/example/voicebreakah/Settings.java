@@ -20,6 +20,7 @@ public class Settings extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     Switch musicSwitch;
     Switch soundSwitch;
+    Switch voiceSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,7 @@ public class Settings extends AppCompatActivity {
 
         musicSwitch = findViewById(R.id.switch3);
         soundSwitch = findViewById(R.id.switch2);
+        voiceSwitch = findViewById(R.id.switch1);
 
         if (myPrefs.getBoolean("MUSIC_ON_OFF", true)) {
             musicSwitch.setChecked(true);
@@ -40,6 +42,12 @@ public class Settings extends AppCompatActivity {
             soundSwitch.setChecked(true);
         } else {
             soundSwitch.setChecked(false);
+        }
+
+        if (myPrefs.getBoolean("VOICE_ON_OFF", true)) {
+            voiceSwitch.setChecked(true);
+        } else {
+            voiceSwitch.setChecked(false);
         }
 
         ImageView backArrow = findViewById(R.id.settings_back_arrow);
@@ -71,6 +79,19 @@ public class Settings extends AppCompatActivity {
                     editor.putBoolean("SOUND_ON_OFF", false);
                 } else {
                     editor.putBoolean("SOUND_ON_OFF", true);
+                }
+                editor.commit();
+            }
+        });
+
+        voiceSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editor = myPrefs.edit();
+                if (myPrefs.getBoolean("VOICE_ON_OFF", true)) {
+                    editor.putBoolean("VOICE_ON_OFF", false);
+                } else {
+                    editor.putBoolean("VOICE_ON_OFF", true);
                 }
                 editor.commit();
             }

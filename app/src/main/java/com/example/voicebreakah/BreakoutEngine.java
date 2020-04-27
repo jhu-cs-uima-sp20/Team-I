@@ -278,41 +278,41 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     /** update method to call in-game */
     private void update(){
-        /**
+
         //handle voice controls
 
-        if(targetLocation>500) {
-            speed += 5;
-            paddle.setMovementState(paddle.RIGHT);
-        }
-        else if(targetLocation<500){
-            speed += 5;
-            paddle.setMovementState(paddle.LEFT);
-        }
-        else
-            paddle.setMovementState(paddle.STOPPED);
+        boolean voiceOn = myPrefs.getBoolean("VOICE_ON_OFF", false);
+        if(voiceOn) {
+            if (targetLocation > 500) {
+                speed += 5;
+                paddle.setMovementState(paddle.RIGHT);
+            } else if (targetLocation < 500) {
+                speed += 5;
+                paddle.setMovementState(paddle.LEFT);
+            } else
+                paddle.setMovementState(paddle.STOPPED);
 
-        if(recording==true) {
-            int bufferReadResult = audioRecord.read(buffer, 0, blockSize);
-            for (int i = 0; i < blockSize && i < bufferReadResult; i++) {
-                toTransform[i] = (double) buffer[i] / 32768.0; // signed
-                // 16
-            }
-            //Log.d("array", "array: " + Arrays.toString(toTransform));
-            transformer.ft(toTransform);
-
-            double max=0;
-            double maxIndex=0;
-            for (int i = 1; i < blockSize; i++){
-                if(toTransform[i]>max){
-                    maxIndex=i;
-                    max=toTransform[i];
+            if (recording == true) {
+                int bufferReadResult = audioRecord.read(buffer, 0, blockSize);
+                for (int i = 0; i < blockSize && i < bufferReadResult; i++) {
+                    toTransform[i] = (double) buffer[i] / 32768.0; // signed
+                    // 16
                 }
+                //Log.d("array", "array: " + Arrays.toString(toTransform));
+                transformer.ft(toTransform);
+
+                double max = 0;
+                double maxIndex = 0;
+                for (int i = 1; i < blockSize; i++) {
+                    if (toTransform[i] > max) {
+                        maxIndex = i;
+                        max = toTransform[i];
+                    }
+                }
+                targetLocation = maxIndex * voiceScaleFactor;
+                Log.d("max", paddle.getRect().centerX() + " " + targetLocation);
             }
-            targetLocation=maxIndex*voiceScaleFactor;
-            Log.d("max", paddle.getRect().centerX()+ " "+targetLocation);
         }
-         **/
         // Move the paddle if required
         paddle.update(fps, speed);
 
