@@ -9,6 +9,8 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,15 +30,23 @@ public class MainActivity extends AppCompatActivity {
     private int paddleIndex;
     private Resources res;
     private ImageView paddleView;
+    private int coins;
 
+    Intent music;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // get rid of status bar
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        // get shared preferences
         myPrefs = getApplicationContext().getSharedPreferences("PREFS", Context.MODE_PRIVATE);
 
-
+        // all the buttons
         Button playButton = findViewById(R.id.play_button);
         playButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -61,12 +71,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        peditor = myPrefs.edit();
 
+        // paddles
+        peditor = myPrefs.edit();
         newUser = myPrefs.getBoolean("newUser",true);
         if(newUser){
             Set<String> paddleIDs = new HashSet();
             paddleIDs.add("00");
+            peditor.putInt("coinBalance",0);
             peditor.putStringSet("paddleSkinSet",paddleIDs);
             peditor.putBoolean("newUser",false);
             paddleIndex = 0;
@@ -77,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         }
         peditor.commit();
 
-
+        // changing paddle
         res = getResources();
         paddleView = findViewById(R.id.paddleView);
 
@@ -86,15 +98,47 @@ public class MainActivity extends AppCompatActivity {
         rightButton.setOnClickListener(rightButtonListener);
         leftButton.setOnClickListener(leftButtonListener);
 
+
+        // background music
+        music = new Intent();
+        music.setClass(this, BackgroundSoundService.class);
+        startService(music);
     }
+
+    /*
+    @Override
+    protected void onPause() {
+        stopService(music);
+        super.onPause();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startService(music);
+    }
+    */
+
+    @Override
+    protected  void onDestroy() {
+        stopService(music);
+        super.onDestroy();
+    }
+
 
     @Override
     protected void onStart() {
         super.onStart();
 
+
         TextView highscore = (TextView) findViewById(R.id.tv_highscore_val);
         int score = myPrefs.getInt("highscore", 0);
         highscore.setText(Integer.toString(score));
+
+        TextView coinText = (TextView) findViewById(R.id.coinBalance_val);
+        int coinBalance = myPrefs.getInt("coinBalance", 0);
+        coinText.setText(Integer.toString(coinBalance));
 
 
         Set<String> paddleIDSet = myPrefs.getStringSet("paddleSkinSet",null);
@@ -104,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         Drawable d = res.getDrawable(getResources().getIdentifier("paddle_"+paddleIDs[paddleIndex], "drawable", "com.example.voicebreakah"));
         paddleView.setImageDrawable(d);
     }
+
 
     private View.OnClickListener rightButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -118,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
             peditor.commit();
         }
     };
+
 
     private View.OnClickListener leftButtonListener = new View.OnClickListener() {
         public void onClick(View v) {

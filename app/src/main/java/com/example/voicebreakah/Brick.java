@@ -9,13 +9,35 @@ public class Brick {
 
     private boolean isVisible;
 
-    Brick(int row, int column, int width, int height){
+    Brick(int row, int column, int width, int height, boolean rb, boolean half, int skip){
         isVisible = true;
         int padding = 1;
-        rect = new Rect((int)(column * width + padding), //* TR get rid of casts and change to RectF
-                (int)(row * height + padding),
-                (int)(column * width + width - padding),
-                (int)(row * height + height - padding));
+
+        if (rb) {
+            int start = column * width + padding - width / 2;
+            if (half) {
+                if (start < 0)
+                    rect = new Rect((int) 0,
+                            (int) (row * height + padding + skip),
+                            (int) (width / 2 - padding),
+                            (int) (row * height + height - padding + skip));
+                else
+                    rect = new Rect((int) start,
+                            (int) (row * height + padding + skip),
+                            (int) (column * width + width / 2 - padding - width / 2),
+                            (int) (row * height + height - padding + skip));
+            } else {
+                rect = new Rect((int) start,
+                        (int) (row * height + padding + skip),
+                        (int) (column * width + width - padding - width / 2),
+                        (int) (row * height + height - padding + skip));
+            }
+        } else {
+            rect = new Rect((int) (column * width + padding), //* TR get rid of casts and change to RectF
+                    (int) (row * height + padding + skip),
+                    (int) (column * width + width - padding),
+                    (int) (row * height + height - padding + skip));
+        }
     }
 
     Rect getRect(){
