@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    
+
     private View.OnClickListener leftButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
             paddleIndex++;
