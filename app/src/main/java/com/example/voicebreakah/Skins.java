@@ -26,6 +26,7 @@ public class Skins extends AppCompatActivity {
     private Context context;
     private Resources res;
     private Set<String> myPaddleSet;
+    private int coins;
     ImageView[] skinViews;
     Object[] myPaddles;
 
@@ -41,6 +42,7 @@ public class Skins extends AppCompatActivity {
         myPrefs = context.getSharedPreferences("PREFS", Context.MODE_PRIVATE);
         peditor = myPrefs.edit();
         res = getResources();
+
 
         ImageView skin0 = findViewById(R.id.skin0);
         ImageView skin1 = findViewById(R.id.skin1);
@@ -67,7 +69,7 @@ public class Skins extends AppCompatActivity {
         newSkinsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(myPaddles.length != skinViews.length) {
+                if(myPaddles.length != skinViews.length && coins>=100) {
                     Intent intent = new Intent(Skins.this, openNewSkin.class);
                     startActivity(intent);
                 }
@@ -82,6 +84,7 @@ public class Skins extends AppCompatActivity {
         super.onStart();
         myPaddleSet = myPrefs.getStringSet("paddleSkinSet",null);
         myPaddles = myPaddleSet.toArray(new String[myPaddleSet.size()]);
+        coins = myPrefs.getInt("coinBalance", 0);
 
         for (int i = 0;i < myPaddles.length && i < skinViews.length; i++ ){
             String paddleSkinName = "paddle_" + myPaddles[i];

@@ -94,11 +94,35 @@
         android:layout_height="wrap_content"
         android:text="@string/highscore"
         android:textColor="@color/colorWhite"
-        android:textSize="@dimen/highscore_txt_size"
+        android:textSize="20dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_highscore_val"
-        app:layout_constraintEnd_toStartOf="@+id/tv_highscore_val"
-        app:layout_constraintHorizontal_bias="0.989"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/coinBalance"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:srcCompat="@drawable/coin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.020"
+        app:layout_constraintVertical_bias="0.020"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/coinBalance_val"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/highscore_val"
+        android:textColor="@color/colorWhite"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/coinBalance"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.022" />
 
     <TextView
         android:id="@+id/tv_highscore_val"
@@ -106,11 +130,10 @@
         android:layout_height="wrap_content"
         android:text="@string/highscore_val"
         android:textColor="@color/colorWhite"
-        android:textSize="@dimen/highscore_txt_size"
+        android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.958"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_highscore"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.022" />
 

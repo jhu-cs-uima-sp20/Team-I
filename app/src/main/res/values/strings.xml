@@ -10,5 +10,6 @@
     <string name="tap">TAP</string>
     <string name="skins">Skins</string>
     <string name="highscore">HIGHSCORE:</string>
+    <string name="coinBalance">COINS:</string>
     <string name="highscore_val">310</string>
 </resources>

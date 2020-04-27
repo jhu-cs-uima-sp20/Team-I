@@ -71,8 +71,8 @@ public class Ball {
     }
 
     void clearObstacleY(float y){//* TR get rid of casts
-        rect.bottom = (int) y;
-        rect.top = (int) (y - ballHeight);
+        rect.bottom = (int) (y - ballHeight);
+        rect.top = (int) y;
     }
 
     void clearObstacleX(float x){//* TR get rid of casts
@@ -92,7 +92,6 @@ public class Ball {
 
     // Update speed factor based on level
     void setSpeedFactor(float sp){
-        //speedFactor = sp;
         xVelocity = originalVelocityX * sp;
         yVelocity = originalVelocityY * sp;
     }
