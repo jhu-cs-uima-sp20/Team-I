@@ -404,8 +404,12 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         // Build a wall of bricks
         numBricks = 0;
-        for(int column = 0; column < 3; column ++ ){
-            for(int row = 0; row < 1; row ++ ){
+        boolean halfBrick = false;
+        int numCols = 3;
+        int numRows = 1;
+        for(int column = 0; column < numCols; column++ ){
+            for(int row = 0; row < numRows; row++ ) {
+                if (row % 2 == 1 && )
                 bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight, 0);
                 numBricks++;
                 bricksLeft++;
@@ -445,7 +449,6 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
             // Draw the ball
             canvas.drawRect(ball.getRect(), paint);
-
 
             // Change the brush color for drawing
             paint.setColor(Color.argb(255,  255, 255, 255));
@@ -501,7 +504,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         paint = new Paint();
         canvas.drawBitmap(bitmap, x, y, paint);
 
-
+        // get all the bitmaps
         Bitmap pauseTitle = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.pause_title);
         Bitmap resume = BitmapFactory.decodeResource(context.getResources(),
@@ -537,6 +540,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     /** Draws the game over screen and its options */
     private void drawGameOver() {
+        // draw white background
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.game_over_background);
         Bitmap bitmap2 = scaleDown(bitmap, (float) screenX - 300, true);
@@ -547,6 +551,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         paint = new Paint();
         canvas.drawBitmap(bitmap2, x, y, paint);
 
+        // get all the bitmaps
         Bitmap gameover = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.game_over_title);
         Bitmap yourScore = BitmapFactory.decodeResource(context.getResources(),
@@ -556,13 +561,11 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         Bitmap playAgain = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.game_over_play_again);
 
-
         gameover = scaleDown(gameover, (float) w - 100, true);
         canvas.drawBitmap(gameover, x + 40, y + 40, paint);
         yourScore = scaleDown(yourScore, (float) (w / 1.8), true);
         canvas.drawBitmap(yourScore, screenX / 2 - yourScore.getWidth() / 2,
                 (float) (screenY / 2 - h * 0.3), paint);
-
 
         home = scaleDown(home, (float) w / 5, true);
         float a = screenX / 2 - home.getWidth() / 2;
@@ -576,7 +579,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         canvas.drawBitmap(playAgain, a, b, paint);
         playAgainR = new Rect((int) a, (int) b, (int) (a + playAgain.getWidth()), (int) (b + playAgain.getHeight()));
 
-
+        // draw the current score
         paint.setColor(Color.argb(255, 255, 192, 29));
         paint.setTextSize(50);
         paint.setTextAlign(Paint.Align.CENTER);
