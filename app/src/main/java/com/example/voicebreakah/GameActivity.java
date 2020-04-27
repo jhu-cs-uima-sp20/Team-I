@@ -92,6 +92,8 @@ public class GameActivity extends AppCompatActivity {
         }
 
     }
+
+
     // This method executes when the player starts the game
     @Override
     protected void onResume() {

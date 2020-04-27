@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView paddleView;
     private int coins;
 
+    Intent music;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,9 +100,30 @@ public class MainActivity extends AppCompatActivity {
 
 
         // background music
-        Intent music = new Intent();
+        music = new Intent();
         music.setClass(this, BackgroundSoundService.class);
         startService(music);
+    }
+
+    /*
+    @Override
+    protected void onPause() {
+        stopService(music);
+        super.onPause();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startService(music);
+    }
+    */
+
+    @Override
+    protected  void onDestroy() {
+        stopService(music);
+        super.onDestroy();
     }
 
 
@@ -126,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         paddleView.setImageDrawable(d);
     }
 
+
     private View.OnClickListener rightButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
             paddleIndex--;
@@ -140,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    
     private View.OnClickListener leftButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
             paddleIndex++;
