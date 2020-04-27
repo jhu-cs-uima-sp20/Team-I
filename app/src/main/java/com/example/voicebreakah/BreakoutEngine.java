@@ -92,14 +92,11 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     int level = 1;
     float speedFactor = 1;
 
-
     // Paddle speed
     int speed = 100;
 
     // player touching screen
     boolean touching = false;
-
-
 
     /** The constructor is called when the object is first created */
     public BreakoutEngine(Context context, int x, int y) {
@@ -110,8 +107,6 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         myPrefs = context.getSharedPreferences("PREFS",Context.MODE_PRIVATE);
         this.context = context;
         peditor = myPrefs.edit();
-
-
 
         // Initialize ourHolder and paint objects
         ourHolder = getHolder();
@@ -140,7 +135,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         // Load the sounds
         // This SoundPool is deprecated but don't worry
-        /*
+
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
 
         try{
@@ -167,7 +162,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         } catch(IOException e){
             // Print an error message to the console
             Log.e("error", "failed to load sound files");
-        }*/
+        }
 
         restart();
     }
@@ -237,28 +232,26 @@ class BreakoutEngine extends SurfaceView implements Runnable{
                     ball.reverseYVelocity();
                     score = score + 10;
                     bricksLeft--;
-                    //soundPool.play(explodeID, 1, 1, 0, 0, 1);
+                    soundPool.play(explodeID, 1, 1, 0, 0, 1);
                 }
             }
         }
 
         // Check for ball colliding with paddle
         if(Rect.intersects(paddle.getRect(),ball.getRect())) { //*change to RectF.intersects
-            //ball.setRandomXVelocity();
             ball.setXVelocity(ball.getXVelocity());
             ball.reverseYVelocity();
             ball.clearObstacleY(paddle.getRect().top - 10);
-            //soundPool.play(beep1ID, 1, 1, 0, 0, 1);
+            soundPool.play(beep1ID, 1, 1, 0, 0, 1);
         }
 
 
         // If ball hits bottom of screen, game over
         if(ball.getRect().bottom > screenY){
-            //ball.reverseYVelocity();
             ball.clearObstacleY(screenY - 2);
             paused = true;
             gameOver = true;
-            // soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
+            soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
 
             // update highscore
             int currHS = myPrefs.getInt("highscore", 0);
@@ -271,17 +264,17 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         } else if (ball.getRect().top < 0){
             ball.reverseYVelocity();
             ball.clearObstacleY(12);
-            //soundPool.play(beep2ID, 1, 1, 0, 0, 1);
+            soundPool.play(beep2ID, 1, 1, 0, 0, 1);
 
         } else if(ball.getRect().left < 0){
             ball.reverseXVelocity();
             ball.clearObstacleX(2);
-            //soundPool.play(beep3ID, 1, 1, 0, 0, 1);
+            soundPool.play(beep3ID, 1, 1, 0, 0, 1);
 
         } else if(ball.getRect().right > screenX){
             ball.reverseXVelocity();
             ball.clearObstacleX(screenX - 42);
-            //soundPool.play(beep3ID, 1, 1, 0, 0, 1);
+            soundPool.play(beep3ID, 1, 1, 0, 0, 1);
         }
 
         // Pause if cleared screen
