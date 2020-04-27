@@ -134,7 +134,8 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     int bufferTop = 0;
 
 
-    /** The constructor is called when the object is first created */
+    /** The constructor is called when the object is first created
+     */
     public BreakoutEngine(Context context, int x, int y) {
         // This calls the default constructor to setup the rest of the object
         super(context);
@@ -158,36 +159,34 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         bufferTop = screenX / 12 + screenX / 24;
 
 
-        targetLocation=screenX/2;
-        voiceScaleFactor=screenX/100.0;
+        targetLocation = screenX / 2;
+        voiceScaleFactor = screenX / 100.0;
+        recording = false;
+
+
         // Initialize the player's paddle
         paddle = new Paddle(screenX, screenY);
 
-        recording=false;
-
-
-
-
+        // Let player choose a paddle skin
         int paddleIndex = myPrefs.getInt("currPaddleIndex",0);
         Set<String> paddleSet = myPrefs.getStringSet("paddleSkinSet",null);
         String[] myPaddles = paddleSet.toArray(new String[paddleSet.size()]);
         String paddleName = "paddle_"+ myPaddles[paddleIndex];
         Resources res = getResources();
         paddleSkin = res.getDrawable(getResources().getIdentifier(paddleName, "drawable", "com.example.voicebreakah"));
+
+        // Initialize other fields
         ball = new Ball();
         numBricks = 0;
         bricksLeft = 0;
-
         speedFactor = 1;
 
         newGame = true;
         gameOver = false;
 
-        // Load the sounds
+        // Load game sounds
         // This SoundPool is deprecated but don't worry
-        /*
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
-
         try{
             // Create objects of the 2 required classes
             AssetManager assetManager = context.getAssets();
@@ -212,23 +211,25 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         } catch(IOException e){
             // Print an error message to the console
             Log.e("error", "failed to load sound files");
-        }*/
-
+        }
 
         restart();
     }
 
+
+    /** Voice control helper method */
     public void initializeAudio(){
         Log.d("init", "initialized");
         audioRecord = new AudioRecord(
                 MediaRecorder.AudioSource.MIC, frequency,
                 channelConfiguration, audioEncoding, bufferSize);
         buffer = new short[blockSize];
-        transformer=new RealDoubleFFT(blockSize);
+        transformer = new RealDoubleFFT(blockSize);
         toTransform = new double[blockSize];
         audioRecord.startRecording();
-        recording=true;
+        recording = true;
     }
+
 
     /** Runs when the OS calls onPause on BreakoutActivity method */
     public void pause() {
@@ -256,9 +257,8 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             // Capture the current time in milliseconds in startFrameTime
             long startFrameTime = System.currentTimeMillis();
 
-            // Update the frame+
             if(!paused){
-                update();
+                update(); // Update the frame+
             }
             draw();  // Draw the frame
 
@@ -326,7 +326,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
                     ball.reverseYVelocity();
                     score = score + 10;
                     bricksLeft--;
-                    //soundPool.play(explodeID, 1, 1, 0, 0, 1);
+                    soundPool.play(explodeID, 1, 1, 0, 0, 1);
                 }
             }
         }
@@ -337,17 +337,16 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             ball.setXVelocity(ball.getXVelocity());
             ball.reverseYVelocity();
             ball.clearObstacleY(paddle.getRect().top - 10);
-            //soundPool.play(beep1ID, 1, 1, 0, 0, 1);
+            soundPool.play(beep1ID, 1, 1, 0, 0, 1);
         }
 
 
         // If ball hits bottom of screen, game over
         if(ball.getRect().bottom > screenY){
-            //ball.reverseYVelocity();
             ball.clearObstacleY(screenY - 2);
             paused = true;
             gameOver = true;
-            // soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
+            soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
 
             // update highscore
             int currHS = myPrefs.getInt("highscore", 0);
@@ -360,17 +359,17 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         } else if (ball.getRect().top < 0){
             ball.reverseYVelocity();
             ball.clearObstacleY(bufferTop);
-            //soundPool.play(beep2ID, 1, 1, 0, 0, 1);
+            soundPool.play(beep2ID, 1, 1, 0, 0, 1);
 
         } else if(ball.getRect().left < 0){
             ball.reverseXVelocity();
             ball.clearObstacleX(2);
-            //soundPool.play(beep3ID, 1, 1, 0, 0, 1);
+            soundPool.play(beep3ID, 1, 1, 0, 0, 1);
 
         } else if(ball.getRect().right > screenX){
             ball.reverseXVelocity();
             ball.clearObstacleX(screenX - 42);
-            //soundPool.play(beep3ID, 1, 1, 0, 0, 1);
+            soundPool.play(beep3ID, 1, 1, 0, 0, 1);
         }
 
         // Pause if cleared screen
@@ -384,7 +383,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     }
 
 
-    // can use later, when have new game option instead of returning to main
+    /** Starts a new game */
     private void newGame() {
         gameOver = false;
         score = 0;
@@ -398,6 +397,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     void restart(){
         Log.d("restart", "restart, " + speedFactor);
 
+        // Set ball and paddle position
         ball.reset(screenX, screenY);
         paddle = new Paddle(screenX, screenY);
 
@@ -441,23 +441,13 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             canvas.drawColor(Color.argb(255,  140, 207, 255));
 
             // Draw everything to the screen
-
-            // Choose the brush color for drawing
             paint.setColor(Color.argb(255,  242, 12, 12));
             Resources res = getResources();
-            //Drawable d = res.getDrawable(R.drawable.paddle_pink);
             Drawable d = paddleSkin;
-
-            //drawable.setBounds(myRect);
-            //drawable.draw(canvas);
-            //PictureDrawable paddle_pic = new PictureDrawable(drawable);
 
             // Draw the paddle
             d.setBounds((paddle.getRect()));
             d.draw(canvas);
-
-            //canvas.drawRect(paddle.getRect(), paint);
-            //canvas.drawPicture(drawable,paddle.getRect());
 
             // Draw the ball
             canvas.drawRect(ball.getRect(), paint);
@@ -488,8 +478,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             canvas.drawText(Integer.toString(score), screenX - size / 4,size / 4 + 40, paint);
             paint.setTextAlign(Paint.Align.LEFT);
 
-
-            // Game over screen
+            // Other screens
             if (gameOver) {
                 drawGameOver();
             }
@@ -614,8 +603,6 @@ class BreakoutEngine extends SurfaceView implements Runnable{
                 height, filter);
         return newBitmap;
     }
-
-
 
 
     /** The SurfaceView class implements onTouchListener, so we can override this method and
