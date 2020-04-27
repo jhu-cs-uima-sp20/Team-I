@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        // paddles
         peditor = myPrefs.edit();
         newUser = myPrefs.getBoolean("newUser",true);
         if(newUser){
@@ -87,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
         }
         peditor.commit();
 
-
         // changing paddle
         res = getResources();
         paddleView = findViewById(R.id.paddleView);
@@ -97,7 +97,13 @@ public class MainActivity extends AppCompatActivity {
         rightButton.setOnClickListener(rightButtonListener);
         leftButton.setOnClickListener(leftButtonListener);
 
+
+        // background music
+        Intent music = new Intent();
+        music.setClass(this, BackgroundSoundService.class);
+        startService(music);
     }
+
 
     @Override
     protected void onStart() {
@@ -109,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextView coinText = (TextView) findViewById(R.id.coinBalance_val);
         int coinBalance = myPrefs.getInt("coinBalance", 0);
-        coinText.setText(Integer.toString(coinBalance));
+        //coinText.setText(Integer.toString(coinBalance));
 
 
         Set<String> paddleIDSet = myPrefs.getStringSet("paddleSkinSet",null);
