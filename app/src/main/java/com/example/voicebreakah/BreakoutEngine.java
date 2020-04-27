@@ -103,6 +103,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     float speedFactor = 1;
 
 
+
     // Paddle speed
     int speed = 100;
 
@@ -350,13 +351,16 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             gameOver = true;
             // soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
 
-            // update highscore
+            // update highscore and coins
+            SharedPreferences.Editor peditor = myPrefs.edit();
             int currHS = myPrefs.getInt("highscore", 0);
             if (score > currHS) {
-                SharedPreferences.Editor peditor = myPrefs.edit();
                 peditor.putInt("highscore", score);
-                peditor.commit();
             }
+            int currCoins = myPrefs.getInt("coinBalance",0);
+            currCoins += (10*level);
+            peditor.putInt("coinBalance",currCoins);
+            peditor.commit();
 
         } else if (ball.getRect().top < 0){
             ball.reverseYVelocity();
@@ -377,7 +381,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
         // Pause if cleared screen
         if (bricksLeft == 0) {
             paused = true;
-            //level++;
+            level++;
             speedFactor += 0.3;
             ball.setSpeedFactor(speedFactor);
             restart();
