@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextView coinText = (TextView) findViewById(R.id.coinBalance_val);
         int coinBalance = myPrefs.getInt("coinBalance", 0);
-        //coinText.setText(Integer.toString(coinBalance));
+        coinText.setText(Integer.toString(coinBalance));
 
 
         Set<String> paddleIDSet = myPrefs.getStringSet("paddleSkinSet",null);
