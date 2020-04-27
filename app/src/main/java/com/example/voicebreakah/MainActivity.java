@@ -131,13 +131,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+
         TextView highscore = (TextView) findViewById(R.id.tv_highscore_val);
         int score = myPrefs.getInt("highscore", 0);
         highscore.setText(Integer.toString(score));
 
         TextView coinText = (TextView) findViewById(R.id.coinBalance_val);
         int coinBalance = myPrefs.getInt("coinBalance", 0);
-        //coinText.setText(Integer.toString(coinBalance));
+        coinText.setText(Integer.toString(coinBalance));
 
 
         Set<String> paddleIDSet = myPrefs.getStringSet("paddleSkinSet",null);

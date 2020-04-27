@@ -357,6 +357,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
             }
             int currCoins = myPrefs.getInt("coinBalance",0);
             currCoins += (10*level);
+            Log.d("V","coins: "+currCoins);
             peditor.putInt("coinBalance",currCoins);
             peditor.commit();
 
@@ -391,7 +392,7 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     private void newGame() {
         gameOver = false;
         score = 0;
-        level = 0;
+        level = 1;
         ball.setSpeedFactor(1);
         restart();
     }
