@@ -36,7 +36,6 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     // This is our thread
     private Thread gameThread = null;
-    //private Thread gameOverThread = null;
 
     // This is new. We need a SurfaceHolder when we use Paint and Canvas in a thread
     // We will see it in action in the draw method soon.
@@ -89,25 +88,26 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
     // The score
     int score = 0;
-    //int prevScore = 0;
 
+    // Variables to keep track of game progress
     boolean newGame;
     boolean gameOver;
     boolean pauseMenu;
 
-
-    boolean recording=false;
-    // Lives
-    int lives = 3;
+    // levels
     int level = 1;
-    float speedFactor = 1;
 
+    // Ball speed
+    float speedFactor = 1;
 
     // Paddle speed
     int speed = 100;
 
     // player touching screen
     boolean touching = false;
+
+    // Voice control
+    boolean recording = false;
 
     private RealDoubleFFT transformer;
     int frequency = 8000;
@@ -123,16 +123,15 @@ class BreakoutEngine extends SurfaceView implements Runnable{
     double targetLocation;
     double voiceScaleFactor;
 
-
+    // Menu options
     private Rect homeR;
     private Rect playAgainR;
     private Rect pauseBtnR;
     private Rect resumeR;
     private Rect newGameR;
 
+    // Optional buffer
     int bufferTop = 0;
-
-
 
 
     /** The constructor is called when the object is first created */
@@ -401,13 +400,14 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         ball.reset(screenX, screenY);
         paddle = new Paddle(screenX, screenY);
-        int brickWidth = screenX / 3;
-        int brickHeight = screenY / 30;
 
         // Build a wall of bricks
         numBricks = 0;
-        int numCols = 3;
-        int numRows = 3;
+        int numCols = 4;
+        int numRows = 5;
+
+        int brickWidth = screenX / numCols;
+        int brickHeight = screenY / 30;
 
         for(int row = 0; row < numRows; row++) {
             boolean rowBrick = false;
