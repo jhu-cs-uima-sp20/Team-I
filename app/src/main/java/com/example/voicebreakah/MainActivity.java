@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private int paddleIndex;
     private Resources res;
     private ImageView paddleView;
+    private int coins;
 
 
     @Override
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         if(newUser){
             Set<String> paddleIDs = new HashSet();
             paddleIDs.add("00");
+            peditor.putInt("coinBalance",0);
             peditor.putStringSet("paddleSkinSet",paddleIDs);
             peditor.putBoolean("newUser",false);
             paddleIndex = 0;
@@ -104,6 +106,10 @@ public class MainActivity extends AppCompatActivity {
         TextView highscore = (TextView) findViewById(R.id.tv_highscore_val);
         int score = myPrefs.getInt("highscore", 0);
         highscore.setText(Integer.toString(score));
+
+        TextView coinText = (TextView) findViewById(R.id.coinBalance_val);
+        int coinBalance = myPrefs.getInt("coinBalance", 0);
+        coinText.setText(Integer.toString(coinBalance));
 
 
         Set<String> paddleIDSet = myPrefs.getStringSet("paddleSkinSet",null);

@@ -59,6 +59,9 @@ public class openNewSkin extends AppCompatActivity {
         newPaddleIndex = randomIndex;
         myPaddlesSet.add(allPaddles[newPaddleIndex]);
         peditor.putStringSet("paddleSkinSet",myPaddlesSet);
+        int coins = myPrefs.getInt("coinBalance",0);
+        coins -=100;
+        peditor.putInt("coinBalance",coins);
         peditor.commit();
 
 
