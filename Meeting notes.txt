@@ -1,0 +1,74 @@
+Date: 3/20/2020
+People: Katherine, Jimmy, Charissa
+Time: 10:30 pm - 12:00 am est
+Design Review feedback from peers:
+- Color scheme issues
+- Too pastely, hard to see, etc.
+- Background noise for voice part? Pitch? Range? Should iron out those issues
+- Calibration page hard to understand
+- Worked on redesigning the design 
+- Added yellow to color theme, changed the blue, so less pastely
+- Got rid of black 
+- Fixed button and pop-up designs 
+- Still need to redesign calibration page & finish revamping tutorial/instructions
+- Maybe change coins to gems or sth?
+
+
+Date: 4/5/2020
+People: Katherine, Jimmy, Stanley, Charissa
+Time: 8:30pm est - 10:14 pm est
+- Finished setting up Github project boards
+- Set up git repo -- everyone cloned and made sure it was working 
+- Will create barebones game for presentation 4/7:
+- Just main page and game w/ bar, platform, and 1+ bricks
+- Buttons to move platform
+- Main Activity: main page
+- Game Activity: game 
+- Finished all basic parts/codes of the game
+
+
+Date: 4/6/2020
+People: Katherine, Stanely, Charissa
+Time: 8:30 pm - 9:30 pm est
+- Continued working on basic game
+
+
+
+Date: 4/9/2020
+People: Katherine, Jimmy, Stanley, Charissa
+Time: 10:00 pm est - 11:20 pm (Jimmy), 00:00 (Stanley), 00:30 (Katherine & Charissa)
+Features implemented: 
+- Smooth increase of paddle speed 
+- Never ending game and levels
+- Increase of ball speed as levels increase
+- Game over screen
+Fixed some issues:
+- Ball now starts above paddle at beginning of game
+Issues left:
+- Ball sometimes gets stuck on the top of the screen and doesn’t move
+- When velocity too slow! But why?
+- Get rid of action bar on top of game screen page
+
+
+Date: 4/17/2020
+People: Kat, Stanley, Charissa
+Time: 5:15 pm - 5:30 pm est
+- voice control -- jimmy?
+- Pause menu -- Stanley 
+- Rolling for new skins and being able to choose them -- Kat
+- Fix up end game -- Charissa
+Settings:
+- Toggling b/t tap and voice-control 
+- Implement sounds and toggle -- Stanley
+- Coin collecting function in game and being able to purchase skins
+- Different dimensions for different sized screens -- Charissa
+
+
+Date: 4/21/2020
+People: Kat, Jimmy, Charissa 
+Time: 5:00 pm - 5:15 pm est 
+- Kat -- Skins finished
+- Charissa -- Finish end game 
+- Jimmy -- add voice control options and toggle between voice and tap 
+- Stanley -- pause menu 
+- Someone needs to debug the ball sticking to top of screen thing!
