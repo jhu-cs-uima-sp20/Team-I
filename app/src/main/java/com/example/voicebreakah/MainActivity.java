@@ -81,12 +81,21 @@ public class MainActivity extends AppCompatActivity {
             peditor.putInt("coinBalance",0);
             peditor.putStringSet("paddleSkinSet",paddleIDs);
             peditor.putBoolean("newUser",false);
-            paddleIndex = 0;
+            peditor.putInt("currPaddleIndex",0);
 
         }
         else{
             paddleIndex = myPrefs.getInt("currPaddleIndex",0);
         }
+        //
+        // if you need to reset any preferences or give yourself moneny
+        /*peditor.putInt("coinBalance",300);
+        Set<String> paddleIDs = new HashSet();
+        paddleIDs.add("00");
+        peditor.putStringSet("paddleSkinSet",paddleIDs);
+        peditor.putInt("currPaddleIndex",0);*/
+        //
+
         peditor.commit();
 
         // changing paddle
