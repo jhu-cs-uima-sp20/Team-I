@@ -62,7 +62,7 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 editor = myPrefs.edit();
-                if (myPrefs.getBoolean("MUSIC_ON_OFF", false)) {
+                if (myPrefs.getBoolean("MUSIC_ON_OFF", true)) {
                     editor.putBoolean("MUSIC_ON_OFF", false);
                 } else {
                     editor.putBoolean("MUSIC_ON_OFF", true);

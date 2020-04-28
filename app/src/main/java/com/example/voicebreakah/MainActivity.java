@@ -107,11 +107,10 @@ public class MainActivity extends AppCompatActivity {
 
     /*
     @Override
-    protected void onPause() {
-        //startService(music);
-        super.onPause();
+    protected void onStop() {
+        stopService(music);
+        super.onStop();
     }
-
      */
 
     @Override
