@@ -283,10 +283,10 @@ class BreakoutEngine extends SurfaceView implements Runnable{
 
         boolean voiceOn = myPrefs.getBoolean("VOICE_ON_OFF", false);
         if(voiceOn) {
-            if (targetLocation > 500) {
+            if (targetLocation >0.5) {
                 speed += 5;
                 paddle.setMovementState(paddle.RIGHT);
-            } else if (targetLocation < 500) {
+            } else if (targetLocation < 0.5) {
                 speed += 5;
                 paddle.setMovementState(paddle.LEFT);
             } else
@@ -299,18 +299,16 @@ class BreakoutEngine extends SurfaceView implements Runnable{
                     // 16
                 }
                 //Log.d("array", "array: " + Arrays.toString(toTransform));
-                transformer.ft(toTransform);
+                //transformer.ft(toTransform);
 
                 double max = 0;
-                double maxIndex = 0;
                 for (int i = 1; i < blockSize; i++) {
                     if (toTransform[i] > max) {
-                        maxIndex = i;
                         max = toTransform[i];
                     }
                 }
-                targetLocation = maxIndex * voiceScaleFactor;
-                Log.d("max", paddle.getRect().centerX() + " " + targetLocation);
+                targetLocation = max;
+                //Log.d("max", max+"");
             }
         }
         // Move the paddle if required
